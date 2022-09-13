@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6277345975023654129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 286322520785924898}
+  - component: {fileID: 2626558852531467932}
+  m_Layer: 0
+  m_Name: LedBoard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &286322520785924898
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6277345975023654129}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2626558852531467932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6277345975023654129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5c6ae7f593cac743b5c62f711a81a4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PrefabLed: {fileID: 5051911375241922560, guid: 5e01a88d81b322a459d63a1e7c8850e6,
+    type: 3}
+  PrefabLetterField: {fileID: 1811365575120439339, guid: 94abe613cb6085649b1889bf5ace7901,
+    type: 3}
+  PrefOnMaterial: {fileID: 2100000, guid: 7d840d7b121123542a0d9495cc0beebe, type: 2}
+  PrefOffMaterial: {fileID: 2100000, guid: cecb0cf882c5728478324e42e0f4b2c6, type: 2}
+  LedText: ' LED BOARD '
+  distLetFielsH: 1
+  distLetFielsV: 0
+  isHorizontal: 1
+  isBlink: 0
+  DeltaBlinkTime: 0.5
+  isMove: 0
+  MoveTo: 0
+  DeltaMoveTime: 0.5
+  LedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  BoardColor: {r: 0, g: 0, b: 0, a: 1}
+  LedScale: {x: 0.8, y: 0.8, z: 0.8}
+  BoardLetters: 
+  LetFieldsList: []
+  AllLeds: []
+  OnLeds: []
+  OffLeds: []
