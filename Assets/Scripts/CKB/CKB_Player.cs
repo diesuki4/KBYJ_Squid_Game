@@ -17,7 +17,8 @@ public class CKB_Player : MonoBehaviour
     public enum State
     {
         Alive = 1,
-        Die = 2
+        Stop = 2,
+        Die = 4
     }
     public State state;
 
