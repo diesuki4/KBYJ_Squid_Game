@@ -54,7 +54,15 @@ public class LYJ_TimerLobby : MonoBehaviour
 
         // Debug.Log((int)timeValue);
         ledBoard.LedText = string.Format(" 0{0}", min);
-        ledBoard.LedText += string.Format(" : {00} ", sec);
+
+        if (sec < 10)
+        {
+            ledBoard.LedText += string.Format(" : 0{0} ", sec);
+        }
+        else
+        {
+            ledBoard.LedText += string.Format(" : {00} ", sec);
+        }
         // ledBoard.LedText = string.Format(" {0:D2} : {0:D2} ", min, sec);
     }
 }

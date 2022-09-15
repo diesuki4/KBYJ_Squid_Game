@@ -6,13 +6,13 @@ using UnityEngine;
 public class LYJ_Bridge : MonoBehaviour
 {
     public bool usingGravity;
-    private Rigidbody rg;
+    private Rigidbody rb;
     private BoxCollider bc;
     
     // Start is called before the first frame update
     void Start()
     {
-        rg = GetComponent<Rigidbody>();
+        rb = transform.parent.gameObject.GetComponent<Rigidbody>();
         bc = GetComponent<BoxCollider>();
     }
 
@@ -27,14 +27,14 @@ public class LYJ_Bridge : MonoBehaviour
         }*/
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        print("yeS~~");
         // 1 만약 usingGravity가 true이면
         if (usingGravity)
         {
             // 2 gravity 켜준다
-            rg.useGravity = true;
+            rb.isKinematic = false;
+            rb.useGravity = true;
         }
     }
 }

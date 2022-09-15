@@ -15,7 +15,6 @@ public class LYJ_YeongHeeState : MonoBehaviour
     public GameObject canvasMugunghwa;
     public GameObject canvasBloom;
     public GameObject crosshair;
-
     public GameObject canvasTimer;
     #endregion
 
@@ -27,6 +26,14 @@ public class LYJ_YeongHeeState : MonoBehaviour
     #region attack
     private LYJ_YeongHee yeongHeeHead;
     #endregion
+
+    #region playerDead
+    public float power = 10.0f;
+    public float radius = 5.0f;
+    public float upForce = 0.1f;
+    private bool noUp = true;
+    #endregion
+
     
     /* 상태머신 */
     public enum State
@@ -88,8 +95,7 @@ public class LYJ_YeongHeeState : MonoBehaviour
         // 2 MugunghwaTime / bloomTime 변수에 넣어준다
         mugunghwaTime = UnityEngine.Random.Range(2, 7);
         rayTime = mugunghwaTime - 1;
-        Debug.Log("mugunghwaTime" + mugunghwaTime);
-        // 3 어딘가에서 초기화해준다
+        // Debug.Log("mugunghwaTime" + mugunghwaTime);
     }
 
     private void UpdateIdle()
@@ -123,17 +129,17 @@ public class LYJ_YeongHeeState : MonoBehaviour
         {
             // 3 관련 UI를 표시한다
             canvasMugunghwa.SetActive(true);
-            
-            /* 영희 머리 돌아가기 */
-            yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 180, 0),  currentTime / mugunghwaTime);
-            // 0~5 / 5 5초동안 0~1
+
+            if (currentTime <= 1)
+            {
+                /* 영희 머리 돌아가기 */
+                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 180, 0),  currentTime);
+            }
         }
         else
         {
-            /* 영희 머리 다시 돌리기 */
-            yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 0, 0),  currentTime / mugunghwaTime);
-            
             currentTime = 0;
+            
             canvasMugunghwa.SetActive(false);
             targetForAttack = false;
             crosshair.SetActive(false);
@@ -144,17 +150,32 @@ public class LYJ_YeongHeeState : MonoBehaviour
         // 1 만약 타깃이 되면
         if (targetForAttack == true)
         {
-            /*// 2 타깃 위에 crosshair 표시하고
+            // 2 타깃 위에 crosshair 표시하고
             crosshair.SetActive(true);
             crosshair.transform.position = new Vector3(_playerMoveDetect.lastPos.x, _playerMoveDetect.lastPos.y + 2.5f, _playerMoveDetect.lastPos.z);
-            crosshair.transform.eulerAngles = _playerMoveDetect.lastRot;*/
+            crosshair.transform.eulerAngles = _playerMoveDetect.lastRot;
         }
         // 3 끝나기 1초전에 쏜다 
-        if (currentTime >= rayTime)
+        if (currentTime >= rayTime && targetForAttack)
         {
+            // print("Player dead");
+            Collider[] colliders = Physics.OverlapSphere(_playerMoveDetect.lastPos, radius);
+            foreach (Collider body in colliders)
+            {
+                if (body.tag == "Player")
+                {
+                    Debug.Log(body.name);
+                    Rigidbody rb = body.GetComponent<Rigidbody>();
+                    rb.isKinematic = false;
 
-            // 4 플레이어 산산조각
-            print("Player dead");
+                    if (rb != null && noUp)
+                    {
+                        // print("bomb!!!");
+                        rb.AddExplosionForce(power, _playerMoveDetect.lastPos, radius, upForce, ForceMode.Impulse);
+                        noUp = false;
+                    }
+                }
+            }
         }
     }
 
@@ -168,8 +189,15 @@ public class LYJ_YeongHeeState : MonoBehaviour
         // 2 bloomTime 이 될 때까지
         if (currentTime < bloomTime)
         {
+            // print(currentTime);
             // 3 관련 UI를 표시한다
             canvasBloom.SetActive(true);
+            
+            if (currentTime <= 1)
+            {
+                /* 영희 머리 돌아가기 */
+                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 180, 0), new Vector3(0, 0, 0),  currentTime);
+            }
         }
         else
         {
@@ -179,7 +207,7 @@ public class LYJ_YeongHeeState : MonoBehaviour
         }
         
         /* 움직임 감지 */
-        if (_playerMoveDetect.isMoving)
+        if (_playerMoveDetect.isMoving && LYJ_TriggerGround.Instance.insideLine)
         {
             targetForAttack = true;
         }

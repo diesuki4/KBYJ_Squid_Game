@@ -17,6 +17,7 @@ public class LYJ_BridgeControl : MonoBehaviour
         for (int i = 0; i < scaffoldingS.Length; i++)
         {
             scaffoldingS[i].GetComponent<LYJ_Bridge>().usingGravity = usingGravityS[i];
+            // Debug.Log(scaffoldingS[i].GetComponent<LYJ_Bridge>());
         }
     }
 
@@ -65,8 +66,7 @@ public class LYJ_BridgeControl : MonoBehaviour
                         break;
                 }
             }
-            
-            // 0, 3, 5, 6, 8, 11, 13, 15, 17, 19, 21
+            // Debug.Log("usingGravityS[" + i + "]: "  + usingGravityS[i]);
         }
     }
 
@@ -77,7 +77,7 @@ public class LYJ_BridgeControl : MonoBehaviour
             int y = i - 1;
             // [] 0 ~ 21 / game object: 1 ~ 22
             scaffoldingS[y] = GameObject.Find("Scaffolding (" + i + ")");
-            // print("scaffoldingS[y]: " + scaffoldingS[y]);
+            // Debug.Log("scaffoldingS[" + y + "]: " + scaffoldingS[y]);
         }
     }
 }
