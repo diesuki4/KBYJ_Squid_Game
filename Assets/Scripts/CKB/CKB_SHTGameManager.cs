@@ -78,41 +78,25 @@ public class CKB_SHTGameManager : MonoBehaviour
 
     void UpdateInitialize()
     {
-        /*
-        CKB_SHTGameUIManager.Instance.SetOurScoreText(ourScore);
-        CKB_SHTGameUIManager.Instance.SetOpponentScoreText(opponentScore);
         CKB_SHTGameUIManager.Instance.ShowAllUI(true);
-        */
+        CKB_SHTGameUIManager.Instance.ShowDrawAreas(false);
+
         state = State.InGame;
     }
 
     void UpdateInGame()
-    {/*
+    {
         currentTime += Time.deltaTime;
-
-        CKB_SHTGameUIManager.Instance.SetCountDownText(inGameTime - currentTime);
 
         if (currentTime < inGameTime)
         {
-            if (CKB_GameManager.Instance.debugMode)
-            {
-                if (Input.GetKeyDown(KeyCode.LeftBracket))
-                {
-                    CKB_SHTGameUIManager.Instance.SetOurScoreText(ourScore += clickScore);
-                    Debug.Log("[CKB_SHTGameManager] 우리 편 점수 증가 : " + ourScore);
-                }
-                if (Input.GetKeyDown(KeyCode.RightBracket))
-                {
-                    CKB_SHTGameUIManager.Instance.SetOpponentScoreText(opponentScore += clickScore);
-                    Debug.Log("[CKB_SHTGameManager] 상대편 점수 증가 : " + opponentScore);
-                }
-            }
+            CKB_SHTGameUIManager.Instance.SetCountDownText(inGameTime - currentTime);
+            CKB_SHTGameUIManager.Instance.ProcessLineDraw();
         }
         else
         {
             state = State.Result;
         }
-        */
     }
 
     void UpdateResult()

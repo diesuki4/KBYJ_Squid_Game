@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class CKB_SHTGameUIManager : MonoBehaviour
 {
@@ -16,20 +17,22 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     }
 
     Text countDownText;
-    Text ourScoreText;
-    Text opponentScoreText;
-    Text ourSideText;
-    Text pullText;
-    Button pullButton;
+    RectTransform drawAreas;
+    Image sugarHoneycombStarImage;
+
+    GraphicRaycaster grpRaycaster;
+    EventSystem evtSystem;
 
     void Start()
     {
         countDownText = transform.Find("Count Down Text").GetComponent<Text>();
-        ourScoreText = transform.Find("Our Score Panel/Our Score Text").GetComponent<Text>();
-        opponentScoreText = transform.Find("Opponent Score Panel/Opponent Score Text").GetComponent<Text>();
-        ourSideText = transform.Find("Our Side Text").GetComponent<Text>();
-        pullText = transform.Find("Pull Text").GetComponent<Text>();
-        pullButton = transform.Find("Pull Button").GetComponent<Button>();
+        drawAreas = transform.Find("Draw Areas").GetComponent<RectTransform>();
+        sugarHoneycombStarImage = transform.Find("Sugar Honeycomb Star Image").GetComponent<Image>();
+
+        sugarHoneycombStarImage.alphaHitTestMinimumThreshold = 0.5f;
+
+        grpRaycaster = GetComponent<GraphicRaycaster>();
+        evtSystem = GetComponent<EventSystem>();
     }
 
     void Update() { }
@@ -39,35 +42,33 @@ public class CKB_SHTGameUIManager : MonoBehaviour
         countDownText.text = Mathf.CeilToInt(seconds).ToString();
     }
 
-    public void SetOurScoreText(int score)
-    {
-        ourScoreText.text = score.ToString();
-    }
-
-    public void SetOpponentScoreText(int score)
-    {
-        opponentScoreText.text = score.ToString();
-    }
-
-    public void OnPullButtonClick()
-    {
-        if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_TowGameUIManager] Pull 버튼 내용 구현 예정");
-    }
-
     public void ShowAllUI(bool show)
     {
         ShowCountDownText(show);
-        ShowOurScoreText(show);
-        ShowOpponentScoreText(show);
-        ShowOurSideText(show);
-        ShowPullText(show);
-        ShowPullButton(show);
+        ShowDrawAreas(show);
+        ShowSugarHoneycombStarImage(show);
     }
     public void ShowCountDownText(bool show) { countDownText.gameObject.SetActive(show); }
-    public void ShowOurScoreText(bool show) { ourScoreText.transform.parent.gameObject.SetActive(show); }
-    public void ShowOpponentScoreText(bool show) { opponentScoreText.transform.parent.gameObject.SetActive(show); }
-    public void ShowOurSideText(bool show) { ourSideText.gameObject.SetActive(show); }
-    public void ShowPullText(bool show) { pullText.gameObject.SetActive(show); }
-    public void ShowPullButton(bool show) { pullButton.gameObject.SetActive(show); }
+    public void ShowDrawAreas(bool show) { foreach (RectTransform rct in drawAreas) rct.gameObject.SetActive(show); }
+    public void ShowSugarHoneycombStarImage(bool show) { sugarHoneycombStarImage.gameObject.SetActive(show); }
+
+    public void ProcessLineDraw()
+    {
+        PointerEventData evtData = new PointerEventData(evtSystem);
+        evtData.position = Input.mousePosition;
+
+        List<RaycastResult> rayResults = new List<RaycastResult>();
+
+        grpRaycaster.Raycast(evtData, rayResults);
+
+        if (0 < rayResults.Count)
+        {
+            GameObject hitObj = rayResults[0].gameObject;
+            print(hitObj.name);
+
+            if (hitObj.name.Contains("Area"))
+                if (!hitObj.activeSelf)
+                    hitObj.SetActive(true);
+        }
+    }
 }
