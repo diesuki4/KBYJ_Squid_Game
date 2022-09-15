@@ -15,17 +15,24 @@ public class LYJ_YeongHeeState : MonoBehaviour
     public GameObject canvasMugunghwa;
     public GameObject canvasBloom;
     public GameObject crosshair;
+
+    public GameObject canvasTimer;
     #endregion
 
     #region movingDetect
     private LYJ_PlayerMoveDetect _playerMoveDetect;
     private bool targetForAttack;
     #endregion
+
+    #region attack
+    private LYJ_YeongHee yeongHeeHead;
+    #endregion
     
     /* 상태머신 */
     public enum State
     {
         Idle,
+        Conversation,
         Mugunghwa,
         Bloom,
         End,
@@ -36,14 +43,15 @@ public class LYJ_YeongHeeState : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        yeongHeeHead = GetComponentInChildren<LYJ_YeongHee>();
         _playerMoveDetect = CKB_Player.Instance.GetComponent<LYJ_PlayerMoveDetect>();
-
 
         // state = State.Idle;
         state = State.Mugunghwa;
         
         CreatingRandomValue();
         canvasMugunghwa.SetActive(false);
+        canvasTimer.SetActive(false);
         canvasBloom.SetActive(false);
         crosshair.SetActive(false);
     }
@@ -51,12 +59,14 @@ public class LYJ_YeongHeeState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("targetForAttack: " + targetForAttack);
+        // Debug.Log("targetForAttack: " + targetForAttack);
         
         switch (state)
         {
             case State.Idle:
                 UpdateIdle();
+                break;
+            case State.Conversation:
                 break;
             case State.Mugunghwa:
                 UpdateMugunghwa();
@@ -88,12 +98,22 @@ public class LYJ_YeongHeeState : MonoBehaviour
         // 게임 설명 (UI)
         // This is Red Light Green Light!
         // 제한 시간 내에 선 안으로 들어가면 통화입니다
-        Debug.Log("state = State.Idle");
+        // Debug.Log("state = State.Idle");
+        CKB_UI_TextDialogue.Instance.onStart = () => { state = State.Conversation; };
+        CKB_UI_TextDialogue.Instance.AppearTextDialogue();
+        CKB_UI_TextDialogue.Instance.EnqueueConversationText("이번 게임은 구슬 놀이입니다.");
+        CKB_UI_TextDialogue.Instance.EnqueueConversationText("이 게임은 구슬이 짝수 또는 홀수인지 추측하는 게임입니다.");
+        CKB_UI_TextDialogue.Instance.EnqueueConversationText("잘못 맞히면 2개의 구슬을 잃고, 맞히면 구슬 1개를 얻습니다.");
+        CKB_UI_TextDialogue.Instance.EnqueueConversationText("4개의 라운드를 통과하면, 통과입니다!");
+        CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
+        CKB_UI_TextDialogue.Instance.onComplete = () => { state = State.Mugunghwa; };
     }
+    
 
     private void UpdateMugunghwa()
     {
         // Debug.Log("state = State.Mugunghwa");
+        canvasTimer.SetActive(true);
         
         /* UI 표시 */
         // 1 시간이 흐르고
@@ -103,9 +123,16 @@ public class LYJ_YeongHeeState : MonoBehaviour
         {
             // 3 관련 UI를 표시한다
             canvasMugunghwa.SetActive(true);
+            
+            /* 영희 머리 돌아가기 */
+            yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 180, 0),  currentTime / mugunghwaTime);
+            // 0~5 / 5 5초동안 0~1
         }
         else
         {
+            /* 영희 머리 다시 돌리기 */
+            yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 0, 0),  currentTime / mugunghwaTime);
+            
             currentTime = 0;
             canvasMugunghwa.SetActive(false);
             targetForAttack = false;
@@ -117,14 +144,15 @@ public class LYJ_YeongHeeState : MonoBehaviour
         // 1 만약 타깃이 되면
         if (targetForAttack == true)
         {
-            // 2 타깃 위에 crosshair 표시하고
+            /*// 2 타깃 위에 crosshair 표시하고
             crosshair.SetActive(true);
             crosshair.transform.position = new Vector3(_playerMoveDetect.lastPos.x, _playerMoveDetect.lastPos.y + 2.5f, _playerMoveDetect.lastPos.z);
-            crosshair.transform.eulerAngles = _playerMoveDetect.lastRot;
+            crosshair.transform.eulerAngles = _playerMoveDetect.lastRot;*/
         }
         // 3 끝나기 1초전에 쏜다 
         if (currentTime >= rayTime)
         {
+
             // 4 플레이어 산산조각
             print("Player dead");
         }

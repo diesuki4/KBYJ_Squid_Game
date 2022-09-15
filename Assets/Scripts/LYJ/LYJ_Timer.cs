@@ -29,6 +29,7 @@ public class LYJ_Timer : MonoBehaviour
             LYJ_YeongHeeState lyjState = LYJ_YeongHee.Instance.GetComponent<LYJ_YeongHeeState>();
             lyjState.state = LYJ_YeongHeeState.State.End;
         }
+        
         DisplayTime(timeValue);
     }
 

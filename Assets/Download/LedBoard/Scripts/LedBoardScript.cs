@@ -370,6 +370,12 @@ public class LedBoardScript : MonoBehaviour
                 movsec = 0.0f;
             }
         }
+
+        /*if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            LedText = "test";
+            BoardConstructor();
+        }*/
     }
 }
 
