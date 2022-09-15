@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1022,7 +1022,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectTime: 10
   userMarbleCount: 5
-  answerMarbleShowTerm: 0.4
+  answerMarbleDuration: 3
   resultBlinkTerm: 0.2
   resultDuration: 1.5
   totalRound: 4
@@ -4411,7 +4411,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uAD6C\uC2AC \uAC1C\uC218 : 12"
+  m_Text: "\uC815\uB2F5 \uAC1C\uC218 : 12"
 --- !u!222 &285201146
 CanvasRenderer:
   m_ObjectHideFlags: 0

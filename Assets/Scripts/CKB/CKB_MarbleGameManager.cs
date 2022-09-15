@@ -32,8 +32,8 @@ public class CKB_MarbleGameManager : MonoBehaviour
     public float selectTime;
     [Header("유저 구슬 개수")]
     public int userMarbleCount;
-    [Header("정답 구슬 표시 텀")]
-    public float answerMarbleShowTerm;
+    [Header("정답 구슬 표시 시간")]
+    public float answerMarbleDuration;
     [Header("결과 텍스트 깜빡임 텀")]
     public float resultBlinkTerm;
     [Header("결과 텍스트 표시 시간")]
@@ -44,7 +44,6 @@ public class CKB_MarbleGameManager : MonoBehaviour
     public int selection;
 
     int answerMarbleCount;
-    int currentAnswerMarbleCount;
     int currentRound;
     float currentTime;
 
@@ -143,10 +142,9 @@ public class CKB_MarbleGameManager : MonoBehaviour
 
         if (selectTime <= currentTime)
         {            
-            currentAnswerMarbleCount = 0;
             answerMarbleCount = Random.Range(5, 15);
 
-            CKB_MarbleGameUIManager.Instance.SetAnswerMarbleText(0);
+            CKB_MarbleGameUIManager.Instance.SetAnswerMarbleText(answerMarbleCount);
             CKB_MarbleGameUIManager.Instance.ShowAnswerMarbleText(true);
             CKB_MarbleGameUIManager.Instance.ShowCountDownText(false);
             CKB_MarbleGameUIManager.Instance.ShowEvenOddButton(false);
@@ -160,20 +158,13 @@ public class CKB_MarbleGameManager : MonoBehaviour
 
     void UpdateAnswerMarbleCount()
     {
-        if (currentAnswerMarbleCount != answerMarbleCount)
-        {
-            currentTime += Time.deltaTime;
+        currentTime += Time.deltaTime;
 
-            if (answerMarbleShowTerm <= currentTime)
-            {
-                CKB_MarbleGameUIManager.Instance.SetAnswerMarbleText(++currentAnswerMarbleCount);
-
-                currentTime = 0;
-            }
-        }
-        else
+        if (answerMarbleDuration <= currentTime)
         {
             bool result = (answerMarbleCount % 2 == selection);
+
+            currentTime = 0;
 
             state = State.Result;
 

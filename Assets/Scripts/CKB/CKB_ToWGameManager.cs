@@ -19,25 +19,36 @@ public class CKB_ToWGameManager : MonoBehaviour
         Idle = 1,
         Conversation = 2,
         Initialize = 4,
-        Pulling = 8,
-        Result = 16,
-        Alive = 32,
-        Die = 64,
-        End = 128
+        FixPlayer = 8,
+        Pulling = 16,
+        Result = 32,
+        Alive = 64,
+        Die = 128,
+        End = 256
     }
     State state;
 
     [Header("줄다리기 시간")]
     public float pullTime;
+    [Header("초기화 시간")]
+    public float initializeDuratoin;
+    [Header("시작 시 줄에 고정되는 속도")]
+    public float fixSpeed;
     [Header("클릭 당 점수")]
     public int clickScore;
 
     int ourScore;
     int opponentScore;
     float currentTime;
+    Vector3 lineDestPos;
+    Quaternion lineDestRot;
+
+    Transform line;
 
     void Start()
     {
+        line = GameObject.Find("Line").transform;
+
         state = State.Idle;
     }
 
@@ -52,6 +63,9 @@ public class CKB_ToWGameManager : MonoBehaviour
                 break;
             case State.Initialize :
                 UpdateInitialize();
+                break;
+            case State.FixPlayer :
+                UpdateFixPlayer();
                 break;
             case State.Pulling :
                 UpdatePulling();
@@ -86,13 +100,53 @@ public class CKB_ToWGameManager : MonoBehaviour
 
     void UpdateInitialize()
     {
-        CKB_ToWGameUIManager.Instance.SetOurScoreText(ourScore);
-        CKB_ToWGameUIManager.Instance.SetOpponentScoreText(opponentScore);
-        CKB_ToWGameUIManager.Instance.ShowAllUI(true);
+        if (CKB_GameManager.Instance.debugMode)
+        {
+            Debug.Log("[CKB_ToWGameManager] 이동 제한하기");
+            CKB_Player.Instance.state = CKB_Player.State.Stop;
+        }
 
-        currentTime = 0;
+        Vector3 destVec = line.position - CKB_Player.Instance.transform.position;
 
-        state = State.Pulling;
+        destVec = Vector3.ProjectOnPlane(destVec, line.forward);
+
+        lineDestPos = CKB_Player.Instance.transform.position + destVec;
+        lineDestRot = Quaternion.LookRotation(line.forward);
+
+        state = State.FixPlayer;
+    }
+
+    void UpdateFixPlayer()
+    {
+        currentTime += Time.deltaTime;
+
+        if (currentTime < initializeDuratoin)
+        {
+            CKB_Player player = CKB_Player.Instance;
+
+            player.transform.position = Vector3.Lerp(player.transform.position, lineDestPos, Time.deltaTime * fixSpeed);
+            player.transform.rotation = Quaternion.Lerp(player.transform.rotation, lineDestRot, Time.deltaTime * fixSpeed);
+        }
+        else
+        {
+            if (CKB_GameManager.Instance.debugMode)
+            {
+                Debug.Log("[CKB_ToWGameManager] 최종 위치 고정하기");
+                CKB_Player.Instance.transform.position = lineDestPos;
+                CKB_Player.Instance.transform.rotation = lineDestRot;
+
+                Debug.Log("[CKB_ToWGameManager] 줄의 자식으로 등록하기");
+                CKB_Player.Instance.transform.SetParent(line);
+            }
+
+            CKB_ToWGameUIManager.Instance.SetOurScoreText(ourScore);
+            CKB_ToWGameUIManager.Instance.SetOpponentScoreText(opponentScore);
+            CKB_ToWGameUIManager.Instance.ShowAllUI(true);
+
+            currentTime = 0;
+
+            state = State.Pulling;
+        }
     }
 
     void UpdatePulling()
@@ -153,5 +207,10 @@ public class CKB_ToWGameManager : MonoBehaviour
             Debug.Log("[CKB_ToWGameManager] 우리 편 발판 떨어트리기");
 
         state = State.End;
+    }
+
+    void DetectGround(Vector3 position)
+    {
+
     }
 }

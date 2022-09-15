@@ -65,7 +65,7 @@ public class CKB_MarbleGameUIManager : MonoBehaviour
 
     public void SetAnswerMarbleText(int count)
     {
-        answerMarbleText.text = "구슬 개수 : " + count;
+        answerMarbleText.text = "정답 개수 : " + count;
     }
 
     public void SetResultText(bool result)
