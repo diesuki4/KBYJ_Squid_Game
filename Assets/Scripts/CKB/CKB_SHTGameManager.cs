@@ -19,21 +19,16 @@ public class CKB_SHTGameManager : MonoBehaviour
         Idle = 1,
         Conversation = 2,
         Initialize = 4,
-        Pulling = 8,
+        InGame = 8,
         Result = 16,
-        Alive = 32,
-        Die = 64,
-        End = 128
+        End = 32,
+        Die = 64
     }
     State state;
 
-    [Header("줄다리기 시간")]
-    public float pullTime;
-    [Header("클릭 당 점수")]
-    public int clickScore;
+    [Header("달고나 게임 시간")]
+    public float inGameTime;
 
-    int ourScore;
-    int opponentScore;
     float currentTime;
 
     void Start()
@@ -53,26 +48,24 @@ public class CKB_SHTGameManager : MonoBehaviour
             case State.Initialize :
                 UpdateInitialize();
                 break;
-            case State.Pulling :
-                UpdatePulling();
+            case State.InGame :
+                UpdateInGame();
                 break;
             case State.Result :
                 UpdateResult();
                 break;
-            case State.Alive :
-                UpdateAlive();
+            case State.End :
+                UpdateEnd();
                 break;
             case State.Die :
                 UpdateDie();
-                break;
-            case State.End :
                 break;
         }
     }
 
     void UpdateIdle()
     {
-        CKB_ToWGameUIManager.Instance.ShowAllUI(false);
+        CKB_SHTGameUIManager.Instance.ShowAllUI(false);
 
         CKB_UI_TextDialogue.Instance.onStart = () => { state = State.Conversation; };
         CKB_UI_TextDialogue.Instance.AppearTextDialogue();
@@ -85,34 +78,33 @@ public class CKB_SHTGameManager : MonoBehaviour
 
     void UpdateInitialize()
     {
-        CKB_ToWGameUIManager.Instance.SetOurScoreText(ourScore);
-        CKB_ToWGameUIManager.Instance.SetOpponentScoreText(opponentScore);
-        CKB_ToWGameUIManager.Instance.ShowAllUI(true);
-
-        currentTime = 0;
-
-        state = State.Pulling;
+        /*
+        CKB_SHTGameUIManager.Instance.SetOurScoreText(ourScore);
+        CKB_SHTGameUIManager.Instance.SetOpponentScoreText(opponentScore);
+        CKB_SHTGameUIManager.Instance.ShowAllUI(true);
+        */
+        state = State.InGame;
     }
 
-    void UpdatePulling()
-    {
+    void UpdateInGame()
+    {/*
         currentTime += Time.deltaTime;
 
-        CKB_ToWGameUIManager.Instance.SetCountDownText(pullTime - currentTime);
+        CKB_SHTGameUIManager.Instance.SetCountDownText(inGameTime - currentTime);
 
-        if (currentTime < pullTime)
+        if (currentTime < inGameTime)
         {
             if (CKB_GameManager.Instance.debugMode)
             {
                 if (Input.GetKeyDown(KeyCode.LeftBracket))
                 {
-                    CKB_ToWGameUIManager.Instance.SetOurScoreText(ourScore += clickScore);
-                    Debug.Log("[CKB_ToWGameManager] 우리 편 점수 증가 : " + ourScore);
+                    CKB_SHTGameUIManager.Instance.SetOurScoreText(ourScore += clickScore);
+                    Debug.Log("[CKB_SHTGameManager] 우리 편 점수 증가 : " + ourScore);
                 }
                 if (Input.GetKeyDown(KeyCode.RightBracket))
                 {
-                    CKB_ToWGameUIManager.Instance.SetOpponentScoreText(opponentScore += clickScore);
-                    Debug.Log("[CKB_ToWGameManager] 상대편 점수 증가 : " + opponentScore);
+                    CKB_SHTGameUIManager.Instance.SetOpponentScoreText(opponentScore += clickScore);
+                    Debug.Log("[CKB_SHTGameManager] 상대편 점수 증가 : " + opponentScore);
                 }
             }
         }
@@ -120,11 +112,11 @@ public class CKB_SHTGameManager : MonoBehaviour
         {
             state = State.Result;
         }
-        
+        */
     }
 
     void UpdateResult()
-    {
+    {/*
         CKB_ToWGameUIManager.Instance.ShowAllUI(false);
 
         bool result = opponentScore <= ourScore;
@@ -132,16 +124,22 @@ public class CKB_SHTGameManager : MonoBehaviour
         CKB_UI_TextDialogue.Instance.onStart = () => { state = State.Conversation; };
         CKB_UI_TextDialogue.Instance.AppearTextDialogue();
         CKB_UI_TextDialogue.Instance.EnqueueConversationText("게임이 종료되었습니다.");
-        CKB_UI_TextDialogue.Instance.EnqueueConversationText((result ? "우리 " : "상대") + "편이 승리하였습니다.");
-        if (!result) CKB_UI_TextDialogue.Instance.EnqueueConversationText("아쉽군요.");
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
-        CKB_UI_TextDialogue.Instance.onComplete = () => { state = (result) ? State.Alive : State.Die; };
+        CKB_UI_TextDialogue.Instance.onComplete = () => { state = (result) ? State.Alive : State.Die; };*/
     }
 
     void UpdateAlive()
     {
         if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_ToWGameManager] 상대편 발판 떨어트리기");
+            Debug.Log("[CKB_SHTGameManager] 상대편 발판 떨어트리기");
+
+        state = State.End;
+    }
+
+    void UpdateEnd()
+    {
+        if (CKB_GameManager.Instance.debugMode)
+            Debug.Log("[CKB_SHTGameManager] 우리 편 발판 떨어트리기");
 
         state = State.End;
     }
@@ -149,7 +147,7 @@ public class CKB_SHTGameManager : MonoBehaviour
     void UpdateDie()
     {
         if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_ToWGameManager] 우리 편 발판 떨어트리기");
+            Debug.Log("[CKB_SHTGameManager] 우리 편 발판 떨어트리기");
 
         state = State.End;
     }
