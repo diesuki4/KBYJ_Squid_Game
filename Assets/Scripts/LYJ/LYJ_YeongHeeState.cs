@@ -42,6 +42,7 @@ public class LYJ_YeongHeeState : MonoBehaviour
         Conversation,
         Mugunghwa,
         Bloom,
+        Die,
         End,
     }
 
@@ -53,8 +54,8 @@ public class LYJ_YeongHeeState : MonoBehaviour
         yeongHeeHead = GetComponentInChildren<LYJ_YeongHee>();
         _playerMoveDetect = CKB_Player.Instance.GetComponent<LYJ_PlayerMoveDetect>();
 
-        // state = State.Idle;
         state = State.Mugunghwa;
+        // state = State.Idle;
         
         CreatingRandomValue();
         canvasMugunghwa.SetActive(false);
@@ -80,6 +81,9 @@ public class LYJ_YeongHeeState : MonoBehaviour
                 break;
             case State.Bloom:
                 UpdateBloom();
+                break;
+            case State.Die:
+                // UpdateDie();
                 break;
             case State.End:
                 UpdateEnd();
@@ -107,10 +111,8 @@ public class LYJ_YeongHeeState : MonoBehaviour
         // Debug.Log("state = State.Idle");
         CKB_UI_TextDialogue.Instance.onStart = () => { state = State.Conversation; };
         CKB_UI_TextDialogue.Instance.AppearTextDialogue();
-        CKB_UI_TextDialogue.Instance.EnqueueConversationText("이번 게임은 구슬 놀이입니다.");
-        CKB_UI_TextDialogue.Instance.EnqueueConversationText("이 게임은 구슬이 짝수 또는 홀수인지 추측하는 게임입니다.");
-        CKB_UI_TextDialogue.Instance.EnqueueConversationText("잘못 맞히면 2개의 구슬을 잃고, 맞히면 구슬 1개를 얻습니다.");
-        CKB_UI_TextDialogue.Instance.EnqueueConversationText("4개의 라운드를 통과하면, 통과입니다!");
+        CKB_UI_TextDialogue.Instance.EnqueueConversationText("이번 게임은 무궁화꽃이 피었다입니다.");
+        CKB_UI_TextDialogue.Instance.EnqueueConversationText("제한 시간 내에 선 안으로 들어가면 통과입니다.");
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
         CKB_UI_TextDialogue.Instance.onComplete = () => { state = State.Mugunghwa; };
     }
@@ -133,7 +135,7 @@ public class LYJ_YeongHeeState : MonoBehaviour
             if (currentTime <= 1)
             {
                 /* 영희 머리 돌아가기 */
-                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 180, 0),  currentTime);
+                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 180, 0), new Vector3(0, 0, 0),  currentTime);
             }
         }
         else
@@ -155,27 +157,12 @@ public class LYJ_YeongHeeState : MonoBehaviour
             crosshair.transform.position = new Vector3(_playerMoveDetect.lastPos.x, _playerMoveDetect.lastPos.y + 2.5f, _playerMoveDetect.lastPos.z);
             crosshair.transform.eulerAngles = _playerMoveDetect.lastRot;
         }
+
         // 3 끝나기 1초전에 쏜다 
         if (currentTime >= rayTime && targetForAttack)
         {
-            // print("Player dead");
-            Collider[] colliders = Physics.OverlapSphere(_playerMoveDetect.lastPos, radius);
-            foreach (Collider body in colliders)
-            {
-                if (body.tag == "Player")
-                {
-                    Debug.Log(body.name);
-                    Rigidbody rb = body.GetComponent<Rigidbody>();
-                    rb.isKinematic = false;
-
-                    if (rb != null && noUp)
-                    {
-                        // print("bomb!!!");
-                        rb.AddExplosionForce(power, _playerMoveDetect.lastPos, radius, upForce, ForceMode.Impulse);
-                        noUp = false;
-                    }
-                }
-            }
+            GetComponent<LYJ_AttackExplosion>().AttackExplosion(_playerMoveDetect.lastPos, power, radius, upForce);
+            state = State.End;
         }
     }
 
@@ -196,7 +183,7 @@ public class LYJ_YeongHeeState : MonoBehaviour
             if (currentTime <= 1)
             {
                 /* 영희 머리 돌아가기 */
-                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 180, 0), new Vector3(0, 0, 0),  currentTime);
+                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 180, 0),  currentTime);
             }
         }
         else
@@ -212,11 +199,39 @@ public class LYJ_YeongHeeState : MonoBehaviour
             targetForAttack = true;
         }
     }
-
+    
 
     private void UpdateEnd()
     {
         Debug.Log("state = State.End");
         // 다음 씬 로드
     }
+    
+    /*public void AttackExplosion(Vector3 rangePos, float power, float radius, float upForce)
+    {
+
+        // print("Player dead");
+        Collider[] colliders = Physics.OverlapSphere(rangePos, radius);
+        foreach (Collider body in colliders)
+        {
+            if (body.tag == "Player")
+            {
+                Debug.Log(body.name);
+                Rigidbody rb = body.GetComponent<Rigidbody>();
+
+                if (rb != null)
+                {
+                    rb.isKinematic = false;
+                                    
+                    if (noUp)
+                    {
+                        // print("bomb!!!");
+                        rb.AddExplosionForce(power, _playerMoveDetect.lastPos, radius, upForce, ForceMode.Impulse);
+                        noUp = false;
+                    }
+                }
+            }
+            state = State.Die;
+        }
+    }*/
 }

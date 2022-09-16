@@ -57,11 +57,11 @@ public class LYJ_TimerLobby : MonoBehaviour
 
         if (sec < 10)
         {
-            ledBoard.LedText += string.Format(" : 0{0} ", sec);
+            ledBoard.LedText += string.Format(":0{0} ", sec);
         }
         else
         {
-            ledBoard.LedText += string.Format(" : {00} ", sec);
+            ledBoard.LedText += string.Format(":{00} ", sec);
         }
         // ledBoard.LedText = string.Format(" {0:D2} : {0:D2} ", min, sec);
     }
