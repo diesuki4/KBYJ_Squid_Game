@@ -20,12 +20,19 @@ public class CKB_Player : MonoBehaviour
         Stop = 2,
         Die = 4
     }
+    [HideInInspector]
     public State state;
 
-    [Header("죽음 시 튕겨 나가는 정도")]
-    public float dieExplosionForce;
-    [Header("죽음 시 회전하는 정도")]
-    public float dieTorqueForce;
+    public enum DieType
+    {
+        FlyAway = 1,
+        Disassemble = 2
+    }
+
+    [Header("튕겨 나가는 죽음 시 튕기는 정도")]
+    public float dieFlyAwayForce;
+    [Header("튕겨 나가는 죽음 시 회전하는 정도")]
+    public float dieFlyAwayTorque;
 
     Rigidbody rb;
 
@@ -42,21 +49,30 @@ public class CKB_Player : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
-                Die();
+                Die(DieType.Disassemble);
                 Debug.Log("[CKB_Player] 플레이어 즉시 죽음");
             }
         }
     }
 
-    public void Die()
+    public void Die(DieType dieType)
     {
         state = State.Die;
 
         Camera.main.transform.SetParent(null);
 
-        rb.useGravity = true;
-        rb.AddExplosionForce(dieExplosionForce, transform.position + transform.forward * 0.5f + transform.up * 0.8f, 5f, 1f, ForceMode.Impulse);
-        rb.AddTorque(transform.up * dieTorqueForce, ForceMode.Impulse);
+        switch (dieType)
+        {
+            case DieType.FlyAway :
+                rb.useGravity = true;
+                rb.AddExplosionForce(dieFlyAwayForce, transform.position + transform.forward * 0.5f + transform.up * 0.8f, 5f, 1f, ForceMode.Impulse);
+                rb.AddTorque(transform.up * dieFlyAwayTorque, ForceMode.Impulse);
+                break;
+            case DieType.Disassemble :
+                foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>())
+                    rb.isKinematic = false;
+                break;
+        }
 
         CKB_UI_GameOver.Instance.PlayHitEffect();
         CKB_UI_GameOver.Instance.ShowGameOverUI(true);

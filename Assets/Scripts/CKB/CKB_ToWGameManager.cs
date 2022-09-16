@@ -180,9 +180,9 @@ public class CKB_ToWGameManager : MonoBehaviour
 
     void UpdateResult()
     {
-        CKB_ToWGameUIManager.Instance.ShowAllUI(false);
-
         bool result = opponentScore <= ourScore;
+
+        CKB_ToWGameUIManager.Instance.ShowAllUI(false);
 
         CKB_UI_TextDialogue.Instance.onStart = () => { state = State.Conversation; };
         CKB_UI_TextDialogue.Instance.AppearTextDialogue();

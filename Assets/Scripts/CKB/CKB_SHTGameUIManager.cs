@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,30 +46,54 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     public void ShowAllUI(bool show)
     {
         ShowCountDownText(show);
-        ShowDrawAreas(show);
+        ShowAllDrawArea(show);
         ShowSugarHoneycombStarImage(show);
     }
     public void ShowCountDownText(bool show) { countDownText.gameObject.SetActive(show); }
-    public void ShowDrawAreas(bool show) { foreach (RectTransform rct in drawAreas) rct.gameObject.SetActive(show); }
+    public void ShowDrawArea(Image area, bool show)
+    {
+        Color color = area.color;
+        color.a = Convert.ToInt32(show);
+        area.color = color;
+    }
+    public void ShowAllDrawArea(bool show)
+    {
+        foreach (RectTransform area in drawAreas)
+            ShowDrawArea(area.GetComponent<Image>(), show);
+    }
     public void ShowSugarHoneycombStarImage(bool show) { sugarHoneycombStarImage.gameObject.SetActive(show); }
 
-    public void ProcessLineDraw()
+    public Image GraphicRaycast(Vector2 mousePosition)
     {
         PointerEventData evtData = new PointerEventData(evtSystem);
-        evtData.position = Input.mousePosition;
+        evtData.position = mousePosition;
 
         List<RaycastResult> rayResults = new List<RaycastResult>();
+        Image hitImage = null;
 
         grpRaycaster.Raycast(evtData, rayResults);
 
         if (0 < rayResults.Count)
-        {
-            GameObject hitObj = rayResults[0].gameObject;
-            print(hitObj.name);
+            hitImage = rayResults[0].gameObject.GetComponent<Image>();
+        
+        return hitImage;
+    }
 
-            if (hitObj.name.Contains("Area"))
-                if (!hitObj.activeSelf)
-                    hitObj.SetActive(true);
-        }
+    public bool IsInnerArea(Image area)
+    {
+        if (area.name.Contains("Area"))
+            return true;
+        else
+            return false;
+    }
+
+    public bool IsAllDrawAreaVisible()
+    {
+        int numVisibleArea = 0;
+
+        foreach (RectTransform rctArea in drawAreas)
+            numVisibleArea += Convert.ToInt32(rctArea.GetComponent<Image>().color.a);
+
+        return numVisibleArea == drawAreas.childCount;
     }
 }

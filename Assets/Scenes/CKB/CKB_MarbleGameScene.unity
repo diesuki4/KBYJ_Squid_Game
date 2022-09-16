@@ -18946,6 +18946,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1547185907}
     m_Modifications:
+    - target: {fileID: 8054210475399384450, guid: af8d2b51bd6e3964ca173c1ad189a53a, type: 3}
+      propertyPath: dieDisassembleTorque
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 8054210475399384455, guid: af8d2b51bd6e3964ca173c1ad189a53a, type: 3}
       propertyPath: m_RootOrder
       value: 4

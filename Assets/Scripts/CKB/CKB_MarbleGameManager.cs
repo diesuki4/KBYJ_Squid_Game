@@ -210,7 +210,7 @@ public class CKB_MarbleGameManager : MonoBehaviour
     void UpdateDie()
     {
         CKB_MarbleGameUIManager.Instance.ShowAllUI(false);
-        CKB_Player.Instance.Die();
+        CKB_Player.Instance.Die(CKB_Player.DieType.FlyAway);
         state = State.End;
 
         if (CKB_GameManager.Instance.debugMode)
