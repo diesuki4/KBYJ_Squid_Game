@@ -31,7 +31,6 @@ public class LYJ_YeongHeeState : MonoBehaviour
     public float power = 10.0f;
     public float radius = 5.0f;
     public float upForce = 0.1f;
-    private bool noUp = true;
     #endregion
 
     
@@ -199,39 +198,10 @@ public class LYJ_YeongHeeState : MonoBehaviour
             targetForAttack = true;
         }
     }
-    
 
     private void UpdateEnd()
     {
         Debug.Log("state = State.End");
         // 다음 씬 로드
     }
-    
-    /*public void AttackExplosion(Vector3 rangePos, float power, float radius, float upForce)
-    {
-
-        // print("Player dead");
-        Collider[] colliders = Physics.OverlapSphere(rangePos, radius);
-        foreach (Collider body in colliders)
-        {
-            if (body.tag == "Player")
-            {
-                Debug.Log(body.name);
-                Rigidbody rb = body.GetComponent<Rigidbody>();
-
-                if (rb != null)
-                {
-                    rb.isKinematic = false;
-                                    
-                    if (noUp)
-                    {
-                        // print("bomb!!!");
-                        rb.AddExplosionForce(power, _playerMoveDetect.lastPos, radius, upForce, ForceMode.Impulse);
-                        noUp = false;
-                    }
-                }
-            }
-            state = State.Die;
-        }
-    }*/
 }
