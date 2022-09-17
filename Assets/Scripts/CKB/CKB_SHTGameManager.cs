@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CKB_SHTGameManager : MonoBehaviour
 {
@@ -21,8 +22,9 @@ public class CKB_SHTGameManager : MonoBehaviour
         Initialize = 4,
         InGame = 8,
         Result = 16,
-        End = 32,
-        Die = 64
+        Alive = 32,
+        Die = 64,
+        End = 128
     }
     State state;
 
@@ -31,9 +33,13 @@ public class CKB_SHTGameManager : MonoBehaviour
 
     float currentTime;
 
+    Animator agentAnim;
+
     void Start()
     {
         state = State.Idle;
+
+        agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();
     }
 
     void Update()
@@ -54,11 +60,13 @@ public class CKB_SHTGameManager : MonoBehaviour
             case State.Result :
                 UpdateResult();
                 break;
-            case State.End :
-                UpdateEnd();
+            case State.Alive :
+                UpdateAlive();
                 break;
             case State.Die :
                 UpdateDie();
+                break;
+            case State.End :
                 break;
         }
     }
@@ -79,7 +87,7 @@ public class CKB_SHTGameManager : MonoBehaviour
     void UpdateInitialize()
     {
         CKB_SHTGameUIManager.Instance.ShowAllUI(true);
-        CKB_SHTGameUIManager.Instance.ShowDrawAreas(false);
+        CKB_SHTGameUIManager.Instance.ShowAllDrawArea(false);
 
         state = State.InGame;
     }
@@ -91,7 +99,20 @@ public class CKB_SHTGameManager : MonoBehaviour
         if (currentTime < inGameTime)
         {
             CKB_SHTGameUIManager.Instance.SetCountDownText(inGameTime - currentTime);
-            CKB_SHTGameUIManager.Instance.ProcessLineDraw();
+
+            if (Input.GetMouseButton(0))
+            {
+                Image hitImage = CKB_SHTGameUIManager.Instance.GraphicRaycast(Input.mousePosition);
+
+                if (hitImage)
+                    if (CKB_SHTGameUIManager.Instance.IsInnerArea(hitImage))
+                        CKB_SHTGameUIManager.Instance.ShowDrawArea(hitImage, true);
+                    else
+                        state = State.Result;
+
+                if (CKB_SHTGameUIManager.Instance.IsAllDrawAreaVisible())
+                    state = State.Result;
+            }
         }
         else
         {
@@ -100,38 +121,37 @@ public class CKB_SHTGameManager : MonoBehaviour
     }
 
     void UpdateResult()
-    {/*
-        CKB_ToWGameUIManager.Instance.ShowAllUI(false);
+    {
+        bool result = CKB_SHTGameUIManager.Instance.IsAllDrawAreaVisible();
 
-        bool result = opponentScore <= ourScore;
+        CKB_SHTGameUIManager.Instance.ShowAllUI(false);
 
         CKB_UI_TextDialogue.Instance.onStart = () => { state = State.Conversation; };
         CKB_UI_TextDialogue.Instance.AppearTextDialogue();
         CKB_UI_TextDialogue.Instance.EnqueueConversationText("게임이 종료되었습니다.");
+        CKB_UI_TextDialogue.Instance.EnqueueConversationText("달고나가 잘 뽑" + (result ? "혔습니다. " : "히지 않았습니다."));
+        if (!result) CKB_UI_TextDialogue.Instance.EnqueueConversationText("아쉽군요.");
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
-        CKB_UI_TextDialogue.Instance.onComplete = () => { state = (result) ? State.Alive : State.Die; };*/
+        CKB_UI_TextDialogue.Instance.onComplete = () => { state = (result) ? State.Alive : State.Die; };
     }
 
     void UpdateAlive()
     {
         if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_SHTGameManager] 상대편 발판 떨어트리기");
-
-        state = State.End;
-    }
-
-    void UpdateEnd()
-    {
-        if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_SHTGameManager] 우리 편 발판 떨어트리기");
+            Debug.Log("[CKB_SHTGameManager] 살아남았습니다!!");
 
         state = State.End;
     }
 
     void UpdateDie()
     {
+        agentAnim.SetTrigger("Load");
+
+        CKB_Player.Instance.Die(CKB_Player.DieType.FlyAway);
+        state = State.End;
+
         if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_SHTGameManager] 우리 편 발판 떨어트리기");
+            Debug.Log("[CKB_SHTGameManager] 죽었습니다!!");
 
         state = State.End;
     }

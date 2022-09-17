@@ -39,15 +39,15 @@ public class CKB_UI_GameOver : MonoBehaviour
         cnvsGrp.blocksRaycasts = active;
     }
 
-    public void PlayHitEffect(float duration = 0.2f)
-    {
-        StartCoroutine(IEPlayHitEffect(duration));
-    }
-
     void ActiveAllUI(bool active)
     {
         foreach (Transform tr in transform)
             tr.gameObject.SetActive(active);
+    }
+
+    public void PlayHitEffect(float duration = 0.2f)
+    {
+        StartCoroutine(IEPlayHitEffect(duration));
     }
 
     IEnumerator IEPlayHitEffect(float duration)

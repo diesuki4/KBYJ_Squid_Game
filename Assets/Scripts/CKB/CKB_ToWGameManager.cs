@@ -30,20 +30,24 @@ public class CKB_ToWGameManager : MonoBehaviour
 
     [Header("줄다리기 시간")]
     public float pullTime;
-    [Header("초기화 시간")]
-    public float initializeDuratoin;
+    [Header("시작 시 줄에 끌려가는 시간")]
+    public float fixPlayerDuratoin;
     [Header("시작 시 줄에 고정되는 속도")]
-    public float fixSpeed;
+    public float fixPlayerSpeed;
     [Header("클릭 당 점수")]
     public int clickScore;
+    [Header("게임이 종료되는 점수 차이")]
+    public int maxDiffScore;
 
     int ourScore;
     int opponentScore;
     float currentTime;
-    Vector3 lineDestPos;
-    Quaternion lineDestRot;
+    Vector3 fixDestPos;
+    Quaternion fixDestRot;
 
     Transform line;
+    Vector3 startLinePos;
+    Vector3 endLinePos;
 
     void Start()
     {
@@ -110,8 +114,8 @@ public class CKB_ToWGameManager : MonoBehaviour
 
         destVec = Vector3.ProjectOnPlane(destVec, line.forward);
 
-        lineDestPos = CKB_Player.Instance.transform.position + destVec;
-        lineDestRot = Quaternion.LookRotation(line.forward);
+        fixDestPos = CKB_Player.Instance.transform.position + destVec;
+        fixDestRot = Quaternion.LookRotation(line.forward);
 
         state = State.FixPlayer;
     }
@@ -120,20 +124,20 @@ public class CKB_ToWGameManager : MonoBehaviour
     {
         currentTime += Time.deltaTime;
 
-        if (currentTime < initializeDuratoin)
+        if (currentTime < fixPlayerDuratoin)
         {
             CKB_Player player = CKB_Player.Instance;
 
-            player.transform.position = Vector3.Lerp(player.transform.position, lineDestPos, Time.deltaTime * fixSpeed);
-            player.transform.rotation = Quaternion.Lerp(player.transform.rotation, lineDestRot, Time.deltaTime * fixSpeed);
+            player.transform.position = Vector3.Lerp(player.transform.position, fixDestPos, Time.deltaTime * fixPlayerSpeed);
+            player.transform.rotation = Quaternion.Lerp(player.transform.rotation, fixDestRot, Time.deltaTime * fixPlayerSpeed);
         }
         else
         {
             if (CKB_GameManager.Instance.debugMode)
             {
                 Debug.Log("[CKB_ToWGameManager] 최종 위치 고정하기");
-                CKB_Player.Instance.transform.position = lineDestPos;
-                CKB_Player.Instance.transform.rotation = lineDestRot;
+                CKB_Player.Instance.transform.position = fixDestPos;
+                CKB_Player.Instance.transform.rotation = fixDestRot;
 
                 Debug.Log("[CKB_ToWGameManager] 줄의 자식으로 등록하기");
                 CKB_Player.Instance.transform.SetParent(line);
@@ -142,6 +146,10 @@ public class CKB_ToWGameManager : MonoBehaviour
             CKB_ToWGameUIManager.Instance.SetOurScoreText(ourScore);
             CKB_ToWGameUIManager.Instance.SetOpponentScoreText(opponentScore);
             CKB_ToWGameUIManager.Instance.ShowAllUI(true);
+
+            LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
+            startLinePos = lineRenderer.GetPosition(0);
+            endLinePos = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
 
             currentTime = 0;
 
@@ -169,20 +177,22 @@ public class CKB_ToWGameManager : MonoBehaviour
                     CKB_ToWGameUIManager.Instance.SetOpponentScoreText(opponentScore += clickScore);
                     Debug.Log("[CKB_ToWGameManager] 상대편 점수 증가 : " + opponentScore);
                 }
+
+                Vector3 destLinePos = Vector3.Lerp(startLinePos, endLinePos, (float)(opponentScore - ourScore + maxDiffScore / 2) / maxDiffScore);
+                line.position = Vector3.Lerp(line.position, destLinePos, Time.deltaTime);
             }
         }
         else
         {
             state = State.Result;
         }
-        
     }
 
     void UpdateResult()
     {
-        CKB_ToWGameUIManager.Instance.ShowAllUI(false);
-
         bool result = opponentScore <= ourScore;
+
+        CKB_ToWGameUIManager.Instance.ShowAllUI(false);
 
         CKB_UI_TextDialogue.Instance.onStart = () => { state = State.Conversation; };
         CKB_UI_TextDialogue.Instance.AppearTextDialogue();
@@ -207,10 +217,5 @@ public class CKB_ToWGameManager : MonoBehaviour
             Debug.Log("[CKB_ToWGameManager] 우리 편 발판 떨어트리기");
 
         state = State.End;
-    }
-
-    void DetectGround(Vector3 position)
-    {
-
     }
 }
