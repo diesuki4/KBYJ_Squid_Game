@@ -20,6 +20,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     Text countDownText;
     RectTransform drawAreas;
     Image sugarHoneycombStarImage;
+    RectTransform toothpick;
 
     GraphicRaycaster grpRaycaster;
     EventSystem evtSystem;
@@ -29,18 +30,29 @@ public class CKB_SHTGameUIManager : MonoBehaviour
         countDownText = transform.Find("Count Down Text").GetComponent<Text>();
         drawAreas = transform.Find("Draw Areas").GetComponent<RectTransform>();
         sugarHoneycombStarImage = transform.Find("Sugar Honeycomb Star Image").GetComponent<Image>();
+        toothpick = transform.Find("Toothpick").GetComponent<RectTransform>();
 
         sugarHoneycombStarImage.alphaHitTestMinimumThreshold = 0.5f;
+        toothpick.Find("Toothpick Press").GetComponent<Image>().enabled = false;
+        toothpick.Find("Toothpick Release").GetComponent<Image>().enabled = true;
 
         grpRaycaster = GetComponent<GraphicRaycaster>();
         evtSystem = GetComponent<EventSystem>();
     }
 
-    void Update() { }
+    void Update()
+    {
+        SetToothpickPosition(Input.mousePosition);
+    }
 
     public void SetCountDownText(float seconds)
     {
         countDownText.text = Mathf.CeilToInt(seconds).ToString();
+    }
+
+    void SetToothpickPosition(Vector3 position)
+    {
+        toothpick.anchoredPosition = position;
     }
 
     public void ShowAllUI(bool show)
@@ -48,6 +60,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
         ShowCountDownText(show);
         ShowAllDrawArea(show);
         ShowSugarHoneycombStarImage(show);
+        ShowToothpick(show);
     }
     public void ShowCountDownText(bool show) { countDownText.gameObject.SetActive(show); }
     public void ShowDrawArea(Image area, bool show)
@@ -62,6 +75,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
             ShowDrawArea(area.GetComponent<Image>(), show);
     }
     public void ShowSugarHoneycombStarImage(bool show) { sugarHoneycombStarImage.gameObject.SetActive(show); }
+    public void ShowToothpick(bool show) { toothpick.gameObject.SetActive(show); }
 
     public Image GraphicRaycast(Vector2 mousePosition)
     {
@@ -81,10 +95,10 @@ public class CKB_SHTGameUIManager : MonoBehaviour
 
     public bool IsInnerArea(Image area)
     {
-        if (area.name.Contains("Area"))
-            return true;
-        else
+        if (area == sugarHoneycombStarImage)
             return false;
+        else
+            return true;
     }
 
     public bool IsAllDrawAreaVisible()

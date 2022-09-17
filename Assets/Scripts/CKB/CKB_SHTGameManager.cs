@@ -104,10 +104,11 @@ public class CKB_SHTGameManager : MonoBehaviour
             {
                 Image hitImage = CKB_SHTGameUIManager.Instance.GraphicRaycast(Input.mousePosition);
 
-                if (hitImage && CKB_SHTGameUIManager.Instance.IsInnerArea(hitImage))
-                    CKB_SHTGameUIManager.Instance.ShowDrawArea(hitImage, true);
-                else
-                    state = State.Result;
+                if (hitImage)
+                    if (CKB_SHTGameUIManager.Instance.IsInnerArea(hitImage))
+                        CKB_SHTGameUIManager.Instance.ShowDrawArea(hitImage, true);
+                    else
+                        state = State.Result;
 
                 if (CKB_SHTGameUIManager.Instance.IsAllDrawAreaVisible())
                     state = State.Result;

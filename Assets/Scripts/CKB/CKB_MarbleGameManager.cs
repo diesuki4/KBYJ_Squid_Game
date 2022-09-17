@@ -14,7 +14,7 @@ public class CKB_MarbleGameManager : MonoBehaviour
             Destroy(this);
     }
 
-    enum State
+    public enum State
     {
         Idle = 1,
         Conversation = 2,
@@ -26,7 +26,8 @@ public class CKB_MarbleGameManager : MonoBehaviour
         Die = 128,
         End = 256
     }
-    State state;
+    [HideInInspector]
+    public State state;
 
     [Header("구슬 선택 시간")]
     public float selectTime;
@@ -34,8 +35,6 @@ public class CKB_MarbleGameManager : MonoBehaviour
     public int userMarbleCount;
     [Header("정답 구슬 표시 시간")]
     public float answerMarbleDuration;
-    [Header("결과 텍스트 깜빡임 텀")]
-    public float resultBlinkTerm;
     [Header("결과 텍스트 표시 시간")]
     public float resultDuration;
     [Header("총 라운드 수")]
@@ -176,7 +175,7 @@ public class CKB_MarbleGameManager : MonoBehaviour
             CKB_MarbleGameUIManager.Instance.SetUserMarbleText(userMarbleCount);
 
             CKB_MarbleGameUIManager.Instance.SetResultText(result);
-            StartCoroutine(IEBlinkResultText());
+            CKB_MarbleGameUIManager.Instance.BlinkResultTextDuring(state);
 
             CKB_MarbleGameUIManager.Instance.DisappearHandPanel();
         }
@@ -215,18 +214,5 @@ public class CKB_MarbleGameManager : MonoBehaviour
 
         if (CKB_GameManager.Instance.debugMode)
             Debug.Log("[CKB_MarbleGameManager] 죽었습니다!!");
-    }
-
-    IEnumerator IEBlinkResultText()
-    {
-        while (state == State.Result)
-        {
-            if (CKB_MarbleGameUIManager.Instance.GetResultTextActiveState())
-                CKB_MarbleGameUIManager.Instance.ShowResultText(false);
-            else
-                CKB_MarbleGameUIManager.Instance.ShowResultText(true);
-
-            yield return new WaitForSeconds(resultBlinkTerm);
-        }
     }
 }

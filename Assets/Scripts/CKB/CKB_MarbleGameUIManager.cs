@@ -116,8 +116,6 @@ public class CKB_MarbleGameUIManager : MonoBehaviour
     public void ShowHandPaperPanel(bool show) { handPaperPanel.gameObject.SetActive(show); }
     public void ShowEvenOddButton(bool show) { evenButton.gameObject.SetActive(show); oddButton.gameObject.SetActive(show); }
 
-    public bool GetResultTextActiveState() { return resultText.gameObject.activeSelf; }
-
     public void AppearHandPanel(int marbleCount, float destY = 0f, float duration = 1f)
     {
         handRockPanel.anchoredPosition = Vector2.up * 500;
@@ -138,5 +136,23 @@ public class CKB_MarbleGameUIManager : MonoBehaviour
         {
             ShowHandPaperPanel(false);
         });
+    }
+
+    public void BlinkResultTextDuring(CKB_MarbleGameManager.State state, float resultBlinkTerm = 0.2f)
+    {
+        StartCoroutine(IEBlinkResultTextDuring(state, resultBlinkTerm));
+    }
+
+    IEnumerator IEBlinkResultTextDuring(CKB_MarbleGameManager.State state, float resultBlinkTerm)
+    {
+        while (CKB_MarbleGameManager.Instance.state == state)
+        {
+            if (resultText.gameObject.activeSelf)
+                ShowResultText(false);
+            else
+                ShowResultText(true);
+
+            yield return new WaitForSeconds(resultBlinkTerm);
+        }
     }
 }
