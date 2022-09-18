@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = System.Random;
 
-public class BridgeGameManager : MonoBehaviour
+public class BridgeGameManager : MonoBehaviourPun
 {
     private GameObject player;
     public Transform randomPos;
@@ -30,7 +31,8 @@ public class BridgeGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Transform nickname = player.transform.Find("Canvas/Nickname");
+        nickname.GetComponent<Text>().text = photonView.Owner.NickName;
     }
 
     // Update is called once per frame
