@@ -52,6 +52,13 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     {
         base.OnCreatedRoom();
         
+        PhotonNetwork.LoadLevel("BridgeScene");
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
+        
         JoinRoom();
     }
 
@@ -66,13 +73,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-
+        
         PhotonNetwork.LoadLevel("BridgeScene");
-    }
-    
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        base.OnJoinRoomFailed(returnCode, message);
-        print("OnJoinRoomFailed , " + returnCode + ", " + message);
     }
 }
