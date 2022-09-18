@@ -1,19 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class CKB_Player : MonoBehaviour
 {
-    public static CKB_Player Instance;
-
-    void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(this);
-    }
-
     public enum State
     {
         Alive = 1,

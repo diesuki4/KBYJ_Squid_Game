@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class ConnectionManager : MonoBehaviourPunCallbacks
+public class PhotonConnect : MonoBehaviourPunCallbacks
 {
     void Start()
     {
@@ -25,6 +25,6 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedLobby();
 
-        PhotonNetwork.LoadLevel("LobbyScene");
+        PhotonNetwork.LoadLevel("BridgeScene");
     }
 }

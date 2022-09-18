@@ -17,12 +17,13 @@ public class LYJ_BridgeDie : MonoBehaviour
     #endregion
 
     private bool explosion;
+    public GameObject player; 
 
     // Start is called before the first frame update
     void Start()
     {
         attackExplosion = GetComponent<LYJ_AttackExplosion>();
-        _playerMoveDetect = CKB_Player.Instance.GetComponent<LYJ_PlayerMoveDetect>();
+        _playerMoveDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
         
         print("attackExplosion: " + attackExplosion + " _playerMoveDetect: " + _playerMoveDetect);
     }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.08453231, g: 0.08453231, b: 0.08453231, a: 1}
+  m_IndirectSpecularColor: {r: 0.08489997, g: 0.08490471, b: 0.08491064, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -216,7 +216,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1680339105}
-  - component: {fileID: 1680339104}
+  - component: {fileID: 1680339106}
   m_Layer: 0
   m_Name: PhotonConnect
   m_TagString: Untagged
@@ -224,18 +224,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1680339104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1680339103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74fc5e34b56f31c48b30f12db05129a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1680339105
 Transform:
   m_ObjectHideFlags: 0
@@ -251,3 +239,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1680339106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680339103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e612d11c4bd024a90b4e369b115bc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
