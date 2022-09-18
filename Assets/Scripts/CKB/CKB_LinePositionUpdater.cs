@@ -6,23 +6,33 @@ public class CKB_LinePositionUpdater : MonoBehaviour
 {
     LineRenderer lineRenderer;
 
-    Vector3 prevPos;
-
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-
-        prevPos = transform.position;
     }
 
     void Update()
     {
-        if (transform.position == prevPos)
-            return;
+        for (int i = 0; i < transform.childCount; ++i)
+            lineRenderer.SetPosition(i, transform.GetChild(i).position);        
+    }
 
-        for (int i = 0; i < lineRenderer.positionCount; ++i)
-            lineRenderer.SetPosition(i, lineRenderer.GetPosition(i) + (transform.position - prevPos));
+    public Transform ClosestBone(Vector3 pos)
+    {
+        Transform closestBone = null;
+        float min = float.MaxValue;
 
-        prevPos = transform.position;
+        foreach (Transform tr in transform)
+        {
+            float distance = Vector3.Distance(tr.position, pos);
+
+            if (distance < min)
+            {
+                closestBone = tr;
+                min = distance;
+            }
+        }
+
+        return closestBone;
     }
 }

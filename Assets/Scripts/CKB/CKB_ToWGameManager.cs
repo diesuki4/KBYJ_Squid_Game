@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,8 +43,10 @@ public class CKB_ToWGameManager : MonoBehaviour
     int ourScore;
     int opponentScore;
     float currentTime;
+    Transform closestLineBone;
     Vector3 fixDestPos;
     Quaternion fixDestRot;
+    float heightDiffBtwLineNPlayer;
 
     Transform line;
     Vector3 startLinePos;
@@ -110,12 +113,12 @@ public class CKB_ToWGameManager : MonoBehaviour
             CKB_Player.Instance.state = CKB_Player.State.Stop;
         }
 
-        Vector3 destVec = line.position - CKB_Player.Instance.transform.position;
+        closestLineBone = line.GetComponent<CKB_LinePositionUpdater>().ClosestBone(CKB_Player.Instance.transform.position);
 
-        destVec = Vector3.ProjectOnPlane(destVec, line.forward);
+        heightDiffBtwLineNPlayer = closestLineBone.position.y - CKB_Player.Instance.transform.position.y;
 
-        fixDestPos = CKB_Player.Instance.transform.position + destVec;
-        fixDestRot = Quaternion.LookRotation(line.forward);
+        fixDestPos = closestLineBone.position + Vector3.down * heightDiffBtwLineNPlayer;
+        fixDestRot = Quaternion.LookRotation(closestLineBone.forward);
 
         state = State.FixPlayer;
     }
@@ -138,9 +141,6 @@ public class CKB_ToWGameManager : MonoBehaviour
                 Debug.Log("[CKB_ToWGameManager] 최종 위치 고정하기");
                 CKB_Player.Instance.transform.position = fixDestPos;
                 CKB_Player.Instance.transform.rotation = fixDestRot;
-
-                Debug.Log("[CKB_ToWGameManager] 줄의 자식으로 등록하기");
-                CKB_Player.Instance.transform.SetParent(line);
             }
 
             CKB_ToWGameUIManager.Instance.SetOurScoreText(ourScore);
@@ -165,6 +165,9 @@ public class CKB_ToWGameManager : MonoBehaviour
 
         if (currentTime < pullTime)
         {
+            CKB_Player.Instance.transform.position = closestLineBone.position + Vector3.down * heightDiffBtwLineNPlayer;
+            CKB_Player.Instance.transform.rotation = Quaternion.LookRotation(closestLineBone.forward);
+
             if (CKB_GameManager.Instance.debugMode)
             {
                 if (Input.GetKeyDown(KeyCode.LeftBracket))
