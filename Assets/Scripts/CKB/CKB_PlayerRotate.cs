@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class CKB_PlayerRotate : MonoBehaviour
+public class CKB_PlayerRotate : MonoBehaviourPun
 {
     [Header("카메라 X축 회전 속도")]
     public float rotSpeedX;
@@ -22,21 +23,29 @@ public class CKB_PlayerRotate : MonoBehaviour
 
     void Start()
     {
-        mainCamBasePos = transform.Find("Main Camera Base Position");
+        if (photonView.IsMine)
+        {
+            Transform mainCam = transform.Find("Main Camera");
+            mainCam.gameObject.SetActive(true);
 
-        Transform mainCam = Camera.main.transform;
-        mainCam.SetParent(mainCamBasePos.Find("Main Camera Position"));
-        mainCam.localEulerAngles = mainCam.localPosition = Vector3.zero;
+            mainCamBasePos = transform.Find("Main Camera Base Position");
 
-        rotX = -mainCamBasePos.localEulerAngles.x;
-        _minRotX = rotX - maxRotX;
-        _maxRotX = rotX + maxRotX;
+            mainCam.SetParent(mainCamBasePos.Find("Main Camera Position"));
+            mainCam.localEulerAngles = mainCam.localPosition = Vector3.zero;
+
+            rotX = -mainCamBasePos.localEulerAngles.x;
+            _minRotX = rotX - maxRotX;
+            _maxRotX = rotX + maxRotX;
+        }
         
         player = GetComponent<CKB_Player>();
     }
 
     void Update()
     {
+        if (!photonView.IsMine)
+            return;
+        
         if (player.state != CKB_Player.State.Alive)
             return;
 

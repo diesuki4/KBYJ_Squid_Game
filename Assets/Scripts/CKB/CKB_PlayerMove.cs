@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class CKB_PlayerMove : MonoBehaviour
+public class CKB_PlayerMove : MonoBehaviourPun
 {
     [Header("이동 속도")]
     public float moveSpeed;
@@ -26,6 +27,9 @@ public class CKB_PlayerMove : MonoBehaviour
 
     void Update()
     {
+        if (!photonView.IsMine)
+            return;
+
         if (player.state != CKB_Player.State.Alive)
             return;
 
