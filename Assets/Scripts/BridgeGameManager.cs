@@ -25,7 +25,8 @@ public class BridgeGameManager : MonoBehaviour
         player = PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
         
         ground.GetComponent<LYJ_BridgeDie>().player = player;
-        
+        ground.GetComponent<LYJ_AttackExplosion>().player = player;
+
     }
 
     // Start is called before the first frame update

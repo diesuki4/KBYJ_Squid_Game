@@ -33,6 +33,8 @@ public class LYJ_YeongHeeState : MonoBehaviour
     public float upForce = 0.1f;
     #endregion
 
+    public GameObject player;
+
     
     /* 상태머신 */
     public enum State
@@ -51,7 +53,7 @@ public class LYJ_YeongHeeState : MonoBehaviour
     void Start()
     {
         yeongHeeHead = GetComponentInChildren<LYJ_YeongHee>();
-        _playerMoveDetect = CKB_Player.Instance.GetComponent<LYJ_PlayerMoveDetect>();
+        _playerMoveDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
 
         state = State.Mugunghwa;
         // state = State.Idle;

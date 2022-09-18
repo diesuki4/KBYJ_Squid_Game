@@ -2195,6 +2195,7 @@ MonoBehaviour:
   power: 10
   radius: 5
   upForce: 1
+  player: {fileID: 250940598}
   state: 0
 --- !u!136 &2044300587
 CapsuleCollider:
@@ -2272,6 +2273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db88a9fb2519d984faae4bef3606c4e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
 --- !u!224 &113779700132183083 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2378230587428629557, guid: 9423ed1d20b27ef41a91f4d90a07d1e1, type: 3}
