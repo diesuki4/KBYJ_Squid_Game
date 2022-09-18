@@ -40,6 +40,8 @@ public class CKB_ToWGameManager : MonoBehaviour
     [Header("게임이 종료되는 점수 차이")]
     public int maxDiffScore;
 
+    CKB_Player player;
+
     int ourScore;
     int opponentScore;
     float currentTime;
@@ -54,6 +56,8 @@ public class CKB_ToWGameManager : MonoBehaviour
 
     void Start()
     {
+        player = GetComponent<CKB_Player>();
+
         line = GameObject.Find("Line").transform;
 
         state = State.Idle;
@@ -110,12 +114,12 @@ public class CKB_ToWGameManager : MonoBehaviour
         if (CKB_GameManager.Instance.debugMode)
         {
             Debug.Log("[CKB_ToWGameManager] 이동 제한하기");
-            CKB_Player.Instance.state = CKB_Player.State.Stop;
+            player.state = CKB_Player.State.Stop;
         }
 
-        closestLineBone = line.GetComponent<CKB_LinePositionUpdater>().ClosestBone(CKB_Player.Instance.transform.position);
+        closestLineBone = line.GetComponent<CKB_LinePositionUpdater>().ClosestBone(player.transform.position);
 
-        heightDiffBtwLineNPlayer = closestLineBone.position.y - CKB_Player.Instance.transform.position.y;
+        heightDiffBtwLineNPlayer = closestLineBone.position.y - player.transform.position.y;
 
         fixDestPos = closestLineBone.position + Vector3.down * heightDiffBtwLineNPlayer;
         fixDestRot = Quaternion.LookRotation(closestLineBone.forward);
@@ -129,8 +133,6 @@ public class CKB_ToWGameManager : MonoBehaviour
 
         if (currentTime < fixPlayerDuratoin)
         {
-            CKB_Player player = CKB_Player.Instance;
-
             player.transform.position = Vector3.Lerp(player.transform.position, fixDestPos, Time.deltaTime * fixPlayerSpeed);
             player.transform.rotation = Quaternion.Lerp(player.transform.rotation, fixDestRot, Time.deltaTime * fixPlayerSpeed);
         }
@@ -139,8 +141,8 @@ public class CKB_ToWGameManager : MonoBehaviour
             if (CKB_GameManager.Instance.debugMode)
             {
                 Debug.Log("[CKB_ToWGameManager] 최종 위치 고정하기");
-                CKB_Player.Instance.transform.position = fixDestPos;
-                CKB_Player.Instance.transform.rotation = fixDestRot;
+                player.transform.position = fixDestPos;
+                player.transform.rotation = fixDestRot;
             }
 
             CKB_ToWGameUIManager.Instance.SetOurScoreText(ourScore);
@@ -165,8 +167,8 @@ public class CKB_ToWGameManager : MonoBehaviour
 
         if (currentTime < pullTime)
         {
-            CKB_Player.Instance.transform.position = closestLineBone.position + Vector3.down * heightDiffBtwLineNPlayer;
-            CKB_Player.Instance.transform.rotation = Quaternion.LookRotation(closestLineBone.forward);
+            player.transform.position = closestLineBone.position + Vector3.down * heightDiffBtwLineNPlayer;
+            player.transform.rotation = Quaternion.LookRotation(closestLineBone.forward);
 
             if (CKB_GameManager.Instance.debugMode)
             {

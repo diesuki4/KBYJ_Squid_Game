@@ -31,12 +31,16 @@ public class CKB_SHTGameManager : MonoBehaviour
     [Header("달고나 게임 시간")]
     public float inGameTime;
 
+    CKB_Player player;
+
     float currentTime;
 
     Animator agentAnim;
 
     void Start()
     {
+        player = GetComponent<CKB_Player>();
+
         state = State.Idle;
 
         agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();
@@ -150,7 +154,7 @@ public class CKB_SHTGameManager : MonoBehaviour
     {
         agentAnim.SetTrigger("Load");
 
-        CKB_Player.Instance.Die(CKB_Player.DieType.FlyAway);
+        player.Die(CKB_Player.DieType.FlyAway);
         state = State.End;
 
         if (CKB_GameManager.Instance.debugMode)

@@ -42,6 +42,8 @@ public class CKB_MarbleGameManager : MonoBehaviour
     [HideInInspector]
     public int selection;
 
+    CKB_Player player;
+
     int answerMarbleCount;
     int currentRound;
     float currentTime;
@@ -50,6 +52,8 @@ public class CKB_MarbleGameManager : MonoBehaviour
 
     void Start()
     {
+        player = GetComponent<CKB_Player>();
+
         state = State.Idle;
 
         agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();
@@ -209,7 +213,7 @@ public class CKB_MarbleGameManager : MonoBehaviour
     void UpdateDie()
     {
         CKB_MarbleGameUIManager.Instance.ShowAllUI(false);
-        CKB_Player.Instance.Die(CKB_Player.DieType.FlyAway);
+        player.Die(CKB_Player.DieType.FlyAway);
         state = State.End;
 
         if (CKB_GameManager.Instance.debugMode)
