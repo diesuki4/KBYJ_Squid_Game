@@ -9,10 +9,6 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
-        
-        CreateRoom();
-
-        JoinRoom();
     }
 
     void Update() { }
@@ -24,13 +20,14 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         PhotonNetwork.NickName = "플레이어" + Random.Range(0, 1000).ToString();
         
         PhotonNetwork.JoinLobby();
+        
     }
 
     public override void OnJoinedLobby()
     {
         base.OnJoinedLobby();
-
-        PhotonNetwork.LoadLevel("BridgeScene");
+        
+        CreateRoom();
     }
     
     
@@ -50,12 +47,32 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         // 2 방 생성 '요청'(방 옵션을 이용해서) 
         PhotonNetwork.CreateRoom("SquidRoom", roomOptions);
     }
-    
+
+    public override void OnCreatedRoom()
+    {
+        base.OnCreatedRoom();
+        
+        JoinRoom();
+    }
+
     /* 방 참가 */
     public void JoinRoom()
     {
         // 1 방 참가 '요청'
         // PhotonNetwork.JoinRoom("XR_B반");
         PhotonNetwork.JoinRoom("SquidRoom");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+
+        PhotonNetwork.LoadLevel("BridgeScene");
+    }
+    
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        base.OnJoinRoomFailed(returnCode, message);
+        print("OnJoinRoomFailed , " + returnCode + ", " + message);
     }
 }
