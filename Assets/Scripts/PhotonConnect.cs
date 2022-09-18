@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.UI;
 
 public class PhotonConnect : MonoBehaviourPunCallbacks
 {
+    public InputField inputField;
+    
     void Start()
+    {
+        // PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public void OnClickButton()
     {
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -17,7 +25,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     {
         base.OnConnectedToMaster();
 
-        PhotonNetwork.NickName = "플레이어" + Random.Range(0, 1000).ToString();
+        PhotonNetwork.NickName = inputField.text;
         
         PhotonNetwork.JoinLobby();
         

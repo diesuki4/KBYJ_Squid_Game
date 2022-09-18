@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/PhotonConnectScene.unity
     guid: 2a142d1efc9c6cb47a6bc40f61ed85c1
   - enabled: 1
-    path: Assets/Scenes/LYJ/BridgeScene3.unity
-    guid: 165bb853d2646c74b82ea00c175c059e
+    path: Assets/Scenes/LYJ/BridgeScene.unity
+    guid: e9ba6655a06d51f4a804e3b46214a161
   m_configObjects: {}
