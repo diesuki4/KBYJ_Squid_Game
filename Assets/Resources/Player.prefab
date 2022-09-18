@@ -222,6 +222,7 @@ GameObject:
   - component: {fileID: 8054210475399384450}
   - component: {fileID: 8054210475399384451}
   - component: {fileID: 8054210475399384452}
+  - component: {fileID: 8484197334249302735}
   - component: {fileID: 8054210475399384453}
   - component: {fileID: -9116088598394301154}
   - component: {fileID: 8054210475399384457}
@@ -229,6 +230,7 @@ GameObject:
   - component: {fileID: 2780542812458516066}
   - component: {fileID: 2220659496583533004}
   - component: {fileID: -1145808654189645847}
+  - component: {fileID: 1880465869258116793}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -300,6 +302,18 @@ MonoBehaviour:
   rotSpeedX: 80
   rotSpeedY: 200
   maxRotX: 8
+--- !u!114 &8484197334249302735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8054210475399384459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db88a9fb2519d984faae4bef3606c4e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!143 &8054210475399384453
 CharacterController:
   m_ObjectHideFlags: 0
@@ -438,6 +452,18 @@ MonoBehaviour:
   lastPos: {x: 0, y: 0, z: 0}
   lastRot: {x: 0, y: 0, z: 0}
   isMoving: 0
+--- !u!114 &1880465869258116793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8054210475399384459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3616b92849b3c6e458adcb262c2c7349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8054210475795031501
 GameObject:
   m_ObjectHideFlags: 0

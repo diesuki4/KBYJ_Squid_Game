@@ -22,9 +22,8 @@ public class BridgeGameManager : MonoBehaviourPun
         Transform randomTr = randomPos.GetChild(UnityEngine.Random.Range(0, randomPos.childCount));
 
         player = PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
-        
+    
         ground.GetComponent<LYJ_BridgeDie>().player = player;
-        ground.GetComponent<LYJ_AttackExplosion>().player = player;
 
     }
 

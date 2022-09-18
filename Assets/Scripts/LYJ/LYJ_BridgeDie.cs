@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class LYJ_BridgeDie : MonoBehaviour
 {
@@ -16,13 +17,12 @@ public class LYJ_BridgeDie : MonoBehaviour
     public float upForce = 0.1f;
     #endregion
 
-    private bool explosion;
     public GameObject player; 
 
     // Start is called before the first frame update
     void Start()
     {
-        attackExplosion = GetComponent<LYJ_AttackExplosion>();
+        attackExplosion = player.GetComponent<LYJ_AttackExplosion>();
         _playerMoveDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
         
         print("attackExplosion: " + attackExplosion + " _playerMoveDetect: " + _playerMoveDetect);
@@ -31,18 +31,15 @@ public class LYJ_BridgeDie : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (explosion)
-        {
-            explosion = false;
-            attackExplosion.AttackExplosion(_playerMoveDetect.lastPos, power, radius, upForce);
-        }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name.Contains("Player"))
         {
-            explosion = true;
+            other.GetComponent<LYJ_AttackExplosion>().photonView.RPC(
+                "AttackExplosion", RpcTarget.All, _playerMoveDetect.lastPos, power, radius, upForce);
         }
     }
 }

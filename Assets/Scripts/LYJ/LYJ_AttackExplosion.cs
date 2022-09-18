@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class LYJ_AttackExplosion : MonoBehaviour
+public class LYJ_AttackExplosion : MonoBehaviourPun
 {
     private bool noUp = true;
-    public GameObject player;
     
     // Start is called before the first frame update
     void Start()
@@ -18,8 +18,11 @@ public class LYJ_AttackExplosion : MonoBehaviour
         
     }
 
+    [PunRPC]
     public void AttackExplosion(Vector3 rangePos, float power, float radius, float upForce)
     {
+        if (photonView.IsMine == false)
+            return;
 
         // print("Player dead");
         Collider[] colliders = Physics.OverlapSphere(rangePos, radius);
@@ -44,7 +47,7 @@ public class LYJ_AttackExplosion : MonoBehaviour
             }
         }
         // CKB_Player.Instance.Die();
-        player.GetComponent<CKB_Player>().Die(CKB_Player.DieType.Disassemble);
+        GetComponent<CKB_Player>().Die(CKB_Player.DieType.Disassemble);
         
         // 오류가 나면 이렇게 변경하세요 @!@!
     }
