@@ -102,6 +102,9 @@ public class CKB_SHTGameManager : MonoBehaviour
 
             if (Input.GetMouseButton(0))
             {
+                if (Input.GetAxisRaw("Mouse X") != 0 || Input.GetAxisRaw("Mouse Y") != 0)
+                    CKB_SHTGameUIManager.Instance.DrawCircle(Input.mousePosition);
+                    
                 Image hitImage = CKB_SHTGameUIManager.Instance.GraphicRaycast(Input.mousePosition);
 
                 if (hitImage)

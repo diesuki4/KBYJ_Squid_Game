@@ -19,6 +19,8 @@ public class CKB_SHTGameUIManager : MonoBehaviour
 
     Text countDownText;
     RectTransform drawAreas;
+    RectTransform drawLines;
+    GameObject circle;
     Image sugarHoneycombStarImage;
     RectTransform toothpick;
 
@@ -28,7 +30,9 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     void Start()
     {
         countDownText = transform.Find("Count Down Text").GetComponent<Text>();
-        drawAreas = transform.Find("Draw Areas").GetComponent<RectTransform>();
+        drawAreas = transform.Find("Draw Areas 2").GetComponent<RectTransform>();
+        drawLines = transform.Find("Draw Lines").GetComponent<RectTransform>();
+        circle = drawLines.Find("Circle").gameObject;
         sugarHoneycombStarImage = transform.Find("Sugar Honeycomb Star Image").GetComponent<Image>();
         toothpick = transform.Find("Toothpick").GetComponent<RectTransform>();
 
@@ -59,6 +63,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     {
         ShowCountDownText(show);
         ShowAllDrawArea(show);
+        ShowDrawLines(show);
         ShowSugarHoneycombStarImage(show);
         ShowToothpick(show);
     }
@@ -66,7 +71,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     public void ShowDrawArea(Image area, bool show)
     {
         Color color = area.color;
-        color.a = Convert.ToInt32(show);
+        color.a = (show) ? 0.003f : 0;
         area.color = color;
     }
     public void ShowAllDrawArea(bool show)
@@ -74,6 +79,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
         foreach (RectTransform area in drawAreas)
             ShowDrawArea(area.GetComponent<Image>(), show);
     }
+    public void ShowDrawLines(bool show) { drawLines.gameObject.SetActive(show); }
     public void ShowSugarHoneycombStarImage(bool show) { sugarHoneycombStarImage.gameObject.SetActive(show); }
     public void ShowToothpick(bool show) { toothpick.gameObject.SetActive(show); }
 
@@ -106,8 +112,14 @@ public class CKB_SHTGameUIManager : MonoBehaviour
         int numVisibleArea = 0;
 
         foreach (RectTransform rctArea in drawAreas)
-            numVisibleArea += Convert.ToInt32(rctArea.GetComponent<Image>().color.a);
+            numVisibleArea += Convert.ToInt32(rctArea.GetComponent<Image>().color.a == 0.003f);
 
         return numVisibleArea == drawAreas.childCount;
+    }
+
+    public void DrawCircle(Vector3 pos)
+    {
+        GameObject go = Instantiate(circle, pos, Quaternion.identity, drawLines);
+        go.GetComponent<Image>().enabled = true;
     }
 }
