@@ -31,10 +31,9 @@ public class BridgeGameManager : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
-        Transform nickname = player.transform.Find("Canvas/Nickname");
-        nickname.GetComponent<Text>().text = photonView.Owner.NickName;
-    }
 
+    }
+    
     // Update is called once per frame
     void Update()
     {
