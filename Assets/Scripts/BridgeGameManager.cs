@@ -9,9 +9,7 @@ using Random = System.Random;
 public class BridgeGameManager : MonoBehaviour
 {
     private GameObject player;
-    public int maxPlayer;
     public Transform randomPos;
-
     public GameObject ground;
     
     private void Awake()
