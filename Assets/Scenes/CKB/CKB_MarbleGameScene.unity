@@ -12875,7 +12875,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 485361306491585229, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1880465869258116793, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
       propertyPath: photonMode

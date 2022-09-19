@@ -2747,9 +2747,45 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 22
       objectReference: {fileID: 0}
+    - target: {fileID: 485361306491585224, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 485361306491585224, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 485361306491585224, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 485361306491585224, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99787176
+      objectReference: {fileID: 0}
+    - target: {fileID: 485361306491585224, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.0652084
+      objectReference: {fileID: 0}
+    - target: {fileID: 485361306491585224, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 485361306491585224, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 485361306491585224, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 7.478
+      objectReference: {fileID: 0}
     - target: {fileID: 485361306491585229, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
       propertyPath: m_Layer
       value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 485361306491585229, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2515346600467533934, guid: 68dfef27487c55844ab9afef1b96cece, type: 3}
       propertyPath: m_Layer
