@@ -162,7 +162,7 @@ public class LYJ_YeongHeeState : MonoBehaviour
         // 3 끝나기 1초전에 쏜다 
         if (currentTime >= rayTime && targetForAttack)
         {
-            GetComponent<LYJ_AttackExplosion>().AttackExplosion(_playerMoveDetect.lastPos, power, radius, upForce);
+            player.GetComponent<LYJ_AttackExplosion>().AttackExplosion(_playerMoveDetect.lastPos, power, radius, upForce);
             state = State.End;
         }
     }
