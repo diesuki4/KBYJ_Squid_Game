@@ -60,7 +60,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     {
         base.OnCreatedRoom();
         
-        PhotonNetwork.LoadLevel("BridgeScene");
+        //PhotonNetwork.LoadLevel("BridgeScene");
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
