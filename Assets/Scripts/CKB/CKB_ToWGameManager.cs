@@ -40,7 +40,7 @@ public class CKB_ToWGameManager : MonoBehaviour
     [Header("게임이 종료되는 점수 차이")]
     public int maxDiffScore;
 
-    CKB_Player player;
+    public CKB_Player player;
 
     int ourScore;
     int opponentScore;
@@ -56,8 +56,6 @@ public class CKB_ToWGameManager : MonoBehaviour
 
     void Start()
     {
-        player = GetComponent<CKB_Player>();
-
         line = GameObject.Find("Line").transform;
 
         state = State.Idle;
@@ -167,6 +165,9 @@ public class CKB_ToWGameManager : MonoBehaviour
 
         if (currentTime < pullTime)
         {
+            if (player.state == CKB_Player.State.Die)
+                return;
+
             player.transform.position = closestLineBone.position + Vector3.down * heightDiffBtwLineNPlayer;
             player.transform.rotation = Quaternion.LookRotation(closestLineBone.forward);
 

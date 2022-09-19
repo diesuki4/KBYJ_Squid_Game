@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class CKB_DieTriggerZone : MonoBehaviour
 {
-    CKB_Player player;
+    public CKB_Player player;
 
-    void Start()
-    {
-        player = GetComponent<CKB_Player>();
-    }
+    void Start() { }
 
     void OnTriggerEnter(Collider other)
     {

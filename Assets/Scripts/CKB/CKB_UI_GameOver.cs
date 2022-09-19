@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using Photon.Pun;
 
 public class CKB_UI_GameOver : MonoBehaviour
 {
@@ -78,7 +79,11 @@ public class CKB_UI_GameOver : MonoBehaviour
         if (CKB_GameManager.Instance.debugMode)
         {
             Debug.Log("[CKB_UI_GameOver] 부활 버튼 클릭");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+            if (CKB_GameManager.Instance.photonMode)
+                PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().name);
+            else
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
@@ -89,7 +94,10 @@ public class CKB_UI_GameOver : MonoBehaviour
             Debug.Log("[CKB_UI_GameOver] 로비로 돌아가기 버튼 클릭");
 
             if (lobbySceneName != "")
-                SceneManager.LoadScene(lobbySceneName);
+                if (CKB_GameManager.Instance.photonMode)
+                    PhotonNetwork.LoadLevel(lobbySceneName);
+                else
+                    SceneManager.LoadScene(lobbySceneName);
         }
     }
 

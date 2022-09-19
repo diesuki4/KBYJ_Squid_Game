@@ -8,6 +8,8 @@ public class CKB_GameManager : MonoBehaviour
 
     [Header("디버그 모드")]
     public bool debugMode;
+    [Header("Photon 모드")]
+    public bool photonMode;
 
     void Awake()
     {

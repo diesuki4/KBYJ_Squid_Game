@@ -31,7 +31,7 @@ public class CKB_SHTGameManager : MonoBehaviour
     [Header("달고나 게임 시간")]
     public float inGameTime;
 
-    CKB_Player player;
+    public CKB_Player player;
 
     float currentTime;
 
@@ -39,8 +39,6 @@ public class CKB_SHTGameManager : MonoBehaviour
 
     void Start()
     {
-        player = GetComponent<CKB_Player>();
-
         state = State.Idle;
 
         agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();

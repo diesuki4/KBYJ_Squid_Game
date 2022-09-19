@@ -27,8 +27,9 @@ public class CKB_PlayerMove : MonoBehaviourPun
 
     void Update()
     {
-        if (!photonView.IsMine)
-            return;
+        if (CKB_GameManager.Instance.photonMode)
+            if (!photonView.IsMine)
+                return;
 
         if (player.state != CKB_Player.State.Alive)
             return;

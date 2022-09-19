@@ -10,7 +10,11 @@ public class PhotonPlayer : MonoBehaviourPun
     void Start()
     {
         Transform nickname = transform.Find("Canvas/Nickname");
-        nickname.GetComponent<Text>().text = photonView.Owner.NickName;
+
+        if (CKB_GameManager.Instance.photonMode)
+            nickname.GetComponent<Text>().text = photonView.Owner.NickName;
+        else
+            nickname.GetComponent<Text>().text = "플레이어";
     }
 
     // Update is called once per frame

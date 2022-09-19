@@ -42,7 +42,7 @@ public class CKB_MarbleGameManager : MonoBehaviour
     [HideInInspector]
     public int selection;
 
-    CKB_Player player;
+    public CKB_Player player;
 
     int answerMarbleCount;
     int currentRound;
@@ -52,8 +52,6 @@ public class CKB_MarbleGameManager : MonoBehaviour
 
     void Start()
     {
-        player = GetComponent<CKB_Player>();
-
         state = State.Idle;
 
         agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();

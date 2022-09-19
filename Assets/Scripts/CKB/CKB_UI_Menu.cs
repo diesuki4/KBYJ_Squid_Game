@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using Photon.Pun;
 
 public class CKB_UI_Menu : MonoBehaviour
 {
@@ -47,7 +48,11 @@ public class CKB_UI_Menu : MonoBehaviour
         if (CKB_GameManager.Instance.debugMode)
         {
             Debug.Log("[CKB_UI_Menu] 부활 버튼 클릭");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+            if (CKB_GameManager.Instance.photonMode)
+                PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().name);
+            else
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 

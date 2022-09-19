@@ -23,7 +23,7 @@ public class CKB_PlayerRotate : MonoBehaviourPun
 
     void Start()
     {
-        if (photonView.IsMine)
+        if (!CKB_GameManager.Instance.photonMode || photonView.IsMine)
         {
             Transform mainCam = transform.Find("Main Camera");
             mainCam.gameObject.SetActive(true);
@@ -43,8 +43,9 @@ public class CKB_PlayerRotate : MonoBehaviourPun
 
     void Update()
     {
-        if (!photonView.IsMine)
-            return;
+        if (CKB_GameManager.Instance.photonMode)
+            if (!photonView.IsMine)
+                return;
         
         if (player.state != CKB_Player.State.Alive)
             return;
