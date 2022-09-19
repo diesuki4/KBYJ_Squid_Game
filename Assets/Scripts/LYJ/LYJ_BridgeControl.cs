@@ -10,6 +10,8 @@ public class LYJ_BridgeControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Physics.gravity = new Vector3(0, -45, 0);
+
         CreateRandomValue();
 
         BringGameObject();

@@ -56,6 +56,17 @@ public class CKB_UI_Menu : MonoBehaviour
         }
     }
 
+    public void OnQuitButtonClick()
+    {
+        if (CKB_GameManager.Instance.photonMode)
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.Disconnect();
+        }
+
+        Application.Quit();
+    }
+
     public void OnReturnLobbyButtonClick(string lobbySceneName)
     {
         if (CKB_GameManager.Instance.debugMode)
