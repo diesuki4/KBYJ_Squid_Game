@@ -21,7 +21,8 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     RectTransform drawAreas;
     RectTransform drawLines;
     GameObject circle;
-    Image sugarHoneycombStarImage;
+    RectTransform sugarHoneycombImages;
+    Image sugarHoneycombImage;
     RectTransform toothpick;
 
     GraphicRaycaster grpRaycaster;
@@ -33,10 +34,12 @@ public class CKB_SHTGameUIManager : MonoBehaviour
         drawAreas = transform.Find("Draw Areas 2").GetComponent<RectTransform>();
         drawLines = transform.Find("Draw Lines").GetComponent<RectTransform>();
         circle = drawLines.Find("Circle").gameObject;
-        sugarHoneycombStarImage = transform.Find("Sugar Honeycomb Star Image").GetComponent<Image>();
+        sugarHoneycombImages = transform.Find("Sugar Honeycomb Images").GetComponent<RectTransform>();
+        sugarHoneycombImage = sugarHoneycombImages.GetChild(UnityEngine.Random.Range(0, sugarHoneycombImages.childCount)).GetComponent<Image>();
         toothpick = transform.Find("Toothpick").GetComponent<RectTransform>();
 
-        sugarHoneycombStarImage.alphaHitTestMinimumThreshold = 0.5f;
+        sugarHoneycombImage.alphaHitTestMinimumThreshold = 0.5f;
+
         toothpick.Find("Toothpick Press").GetComponent<Image>().enabled = false;
         toothpick.Find("Toothpick Release").GetComponent<Image>().enabled = true;
 
@@ -80,7 +83,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
             ShowDrawArea(area.GetComponent<Image>(), show);
     }
     public void ShowDrawLines(bool show) { drawLines.gameObject.SetActive(show); }
-    public void ShowSugarHoneycombStarImage(bool show) { sugarHoneycombStarImage.gameObject.SetActive(show); }
+    public void ShowSugarHoneycombStarImage(bool show) { sugarHoneycombImage.gameObject.SetActive(show); }
     public void ShowToothpick(bool show) { toothpick.gameObject.SetActive(show); }
 
     public Image GraphicRaycast(Vector2 mousePosition)
@@ -101,7 +104,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
 
     public bool IsInnerArea(Image area)
     {
-        if (area == sugarHoneycombStarImage)
+        if (area == sugarHoneycombImage)
             return false;
         else
             return true;
