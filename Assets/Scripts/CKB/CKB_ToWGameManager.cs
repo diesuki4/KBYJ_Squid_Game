@@ -23,9 +23,8 @@ public class CKB_ToWGameManager : MonoBehaviour
         FixPlayer = 8,
         Pulling = 16,
         Result = 32,
-        Alive = 64,
-        Die = 128,
-        End = 256
+        CutLine = 64,
+        End = 128
     }
     State state;
 
@@ -39,6 +38,8 @@ public class CKB_ToWGameManager : MonoBehaviour
     public int clickScore;
     [Header("게임이 종료되는 점수 차이")]
     public int maxDiffScore;
+    [Header("줄의 최대 이동 거리 비율")]
+    public float maxLineMoveRange;
 
     public CKB_Player player;
 
@@ -82,11 +83,8 @@ public class CKB_ToWGameManager : MonoBehaviour
             case State.Result :
                 UpdateResult();
                 break;
-            case State.Alive :
-                UpdateAlive();
-                break;
-            case State.Die :
-                UpdateDie();
+            case State.CutLine :
+                UpdateCutLine();
                 break;
             case State.End :
                 break;
@@ -166,7 +164,10 @@ public class CKB_ToWGameManager : MonoBehaviour
         if (currentTime < pullTime)
         {
             if (player.state == CKB_Player.State.Die)
+            {
+                state = State.Result;
                 return;
+            }
 
             player.transform.position = closestLineBone.position + Vector3.down * heightDiffBtwLineNPlayer;
             player.transform.rotation = Quaternion.LookRotation(closestLineBone.forward);
@@ -184,7 +185,10 @@ public class CKB_ToWGameManager : MonoBehaviour
                     Debug.Log("[CKB_ToWGameManager] 상대편 점수 증가 : " + opponentScore);
                 }
 
-                Vector3 destLinePos = Vector3.Lerp(startLinePos, endLinePos, (float)(opponentScore - ourScore + maxDiffScore / 2) / maxDiffScore);
+                float t = (float)(opponentScore - ourScore + maxDiffScore / 2) / maxDiffScore;
+                t = Mathf.Clamp(t, 0.5f - maxLineMoveRange / 2, 0.5f + maxLineMoveRange / 2);
+                Vector3 destLinePos = Vector3.Lerp(startLinePos, endLinePos, t);
+
                 line.position = Vector3.Lerp(line.position, destLinePos, Time.deltaTime);
             }
         }
@@ -206,21 +210,12 @@ public class CKB_ToWGameManager : MonoBehaviour
         CKB_UI_TextDialogue.Instance.EnqueueConversationText((result ? "우리 " : "상대") + "편이 승리하였습니다.");
         if (!result) CKB_UI_TextDialogue.Instance.EnqueueConversationText("아쉽군요.");
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
-        CKB_UI_TextDialogue.Instance.onComplete = () => { state = (result) ? State.Alive : State.Die; };
+        CKB_UI_TextDialogue.Instance.onComplete = () => { state = State.CutLine; };
     }
 
-    void UpdateAlive()
+    void UpdateCutLine()
     {
-        if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_ToWGameManager] 상대편 발판 떨어트리기");
-
-        state = State.End;
-    }
-
-    void UpdateDie()
-    {
-        if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_ToWGameManager] 우리 편 발판 떨어트리기");
+        
 
         state = State.End;
     }
