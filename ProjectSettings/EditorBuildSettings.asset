@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/PhotonConnectScene.unity
     guid: 2a142d1efc9c6cb47a6bc40f61ed85c1
   - enabled: 1
-    path: Assets/Scenes/LYJ/BridgeScene.unity
-    guid: e9ba6655a06d51f4a804e3b46214a161
+    path: Assets/Scenes/LobbyScene.unity
+    guid: 48a5d119ef4e4344b9f794a567078d62
+  - enabled: 1
+    path: Assets/Scenes/LYJ/WaitingroomScene.unity
+    guid: a1186a2307fe9e940b2b4464c0806e3f
   m_configObjects: {}

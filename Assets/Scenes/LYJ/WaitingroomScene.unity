@@ -17893,7 +17893,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1658984935}
-  - {fileID: 5748982159654406165}
+  - {fileID: 2309837610289939859}
   - {fileID: 1080520255}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -51442,6 +51442,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 723884551}
     m_Modifications:
+    - target: {fileID: 4367302727988542766, guid: af8d2b51bd6e3964ca173c1ad189a53a, type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8054210475399384452, guid: af8d2b51bd6e3964ca173c1ad189a53a, type: 3}
       propertyPath: maxRotX
       value: 8
@@ -51512,6 +51516,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af8d2b51bd6e3964ca173c1ad189a53a, type: 3}
+--- !u!4 &2309837610289939859 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8488145673511374539, guid: af8d2b51bd6e3964ca173c1ad189a53a, type: 3}
+  m_PrefabInstance: {fileID: 2309837610289939858}
+  m_PrefabAsset: {fileID: 0}
 --- !u!33 &2696000253303039030
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -51685,11 +51694,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.037434794, y: 0.0032418806, z: 0.062067296}
   m_Center: {x: 0.018804274, y: 0.00014934057, z: 0.011960896}
---- !u!4 &5748982159654406165 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8054210475399384455, guid: af8d2b51bd6e3964ca173c1ad189a53a, type: 3}
-  m_PrefabInstance: {fileID: 2309837610289939858}
-  m_PrefabAsset: {fileID: 0}
 --- !u!33 &6079416297089594595
 MeshFilter:
   m_ObjectHideFlags: 0
