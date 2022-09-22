@@ -17,7 +17,7 @@ public class LobbyManager : MonoBehaviourPun
         roomNameUI.text = "방이름: " + PhotonNetwork.CurrentRoom.Name;
         playerNum.text = "참가자수: " + PhotonNetwork.CurrentRoom.PlayerCount;
 
-        if (photonView.Owner.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
             startButton.interactable = true;
         else
             startButton.interactable = false;
@@ -26,13 +26,12 @@ public class LobbyManager : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     // 방장이 master
     public void OnClickStartButton()
     {
-        if (photonView.Owner.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
             PhotonNetwork.LoadLevel("WaitingroomScene");
     }
 }
