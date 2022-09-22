@@ -19,6 +19,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
 
     Text countDownText;
     RectTransform drawAreas;
+    RectTransform drawArea;
     RectTransform drawLines;
     GameObject circle;
     RectTransform sugarHoneycombImages;
@@ -31,13 +32,17 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     void Start()
     {
         countDownText = transform.Find("Count Down Text").GetComponent<Text>();
-        drawAreas = transform.Find("Draw Areas 2").GetComponent<RectTransform>();
+        drawAreas = transform.Find("Draw Areas").GetComponent<RectTransform>();
         drawLines = transform.Find("Draw Lines").GetComponent<RectTransform>();
         circle = drawLines.Find("Circle").gameObject;
         sugarHoneycombImages = transform.Find("Sugar Honeycomb Images").GetComponent<RectTransform>();
-        sugarHoneycombImage = sugarHoneycombImages.GetChild(UnityEngine.Random.Range(0, sugarHoneycombImages.childCount)).GetComponent<Image>();
         toothpick = transform.Find("Toothpick").GetComponent<RectTransform>();
 
+        int index = UnityEngine.Random.Range(0, sugarHoneycombImages.childCount);
+        drawArea = drawAreas.GetChild(index).GetComponent<RectTransform>();
+        sugarHoneycombImage = sugarHoneycombImages.GetChild(index).GetComponent<Image>();
+
+        drawArea.gameObject.SetActive(true);
         sugarHoneycombImage.alphaHitTestMinimumThreshold = 0.5f;
 
         toothpick.Find("Toothpick Press").GetComponent<Image>().enabled = false;
@@ -79,7 +84,7 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     }
     public void ShowAllDrawArea(bool show)
     {
-        foreach (RectTransform area in drawAreas)
+        foreach (RectTransform area in drawArea)
             ShowDrawArea(area.GetComponent<Image>(), show);
     }
     public void ShowDrawLines(bool show) { drawLines.gameObject.SetActive(show); }
@@ -114,10 +119,10 @@ public class CKB_SHTGameUIManager : MonoBehaviour
     {
         int numVisibleArea = 0;
 
-        foreach (RectTransform rctArea in drawAreas)
+        foreach (RectTransform rctArea in drawArea)
             numVisibleArea += Convert.ToInt32(rctArea.GetComponent<Image>().color.a == 0.003f);
 
-        return numVisibleArea == drawAreas.childCount;
+        return numVisibleArea == drawArea.childCount;
     }
 
     public void DrawCircle(Vector3 pos)
