@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyManager : MonoBehaviourPun
+public class LobbyManager : MonoBehaviourPunCallbacks
 {
     public Text roomNameUI;
     public Text playerNum;
@@ -13,7 +14,6 @@ public class LobbyManager : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
-        print(PhotonNetwork.CurrentRoom.Name);
         roomNameUI.text = "방이름: " + PhotonNetwork.CurrentRoom.Name;
         playerNum.text = "참가자수: " + PhotonNetwork.CurrentRoom.PlayerCount;
 
@@ -39,5 +39,11 @@ public class LobbyManager : MonoBehaviourPun
     private void RpcLoadLevel()
     {
         PhotonNetwork.LoadLevel("WaitingroomScene");
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+        playerNum.text = "참가자수: " + PhotonNetwork.CurrentRoom.PlayerCount;
     }
 }
