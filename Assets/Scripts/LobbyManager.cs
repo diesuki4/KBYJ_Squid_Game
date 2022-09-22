@@ -32,13 +32,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public void OnClickStartButton()
     {
         if (PhotonNetwork.IsMasterClient)
-            photonView.RPC("RpcLoadLevel", RpcTarget.All);
+            photonView.RPC("RpcLoadLevel", RpcTarget.All, "WaitingroomScene");
     }
 
     [PunRPC]
-    private void RpcLoadLevel()
+    private void RpcLoadLevel(string sceneName)
     {
-        PhotonNetwork.LoadLevel("WaitingroomScene");
+        PhotonNetwork.LoadLevel(sceneName);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

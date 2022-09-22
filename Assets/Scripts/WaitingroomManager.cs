@@ -13,10 +13,10 @@ public class WaitingroomManager : MonoBehaviour
         Transform randomTr = trPos.GetChild(Random.Range(0, trPos.childCount));
         PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    [PunRPC]
+    private void RpcLoadLevel(string sceneName)
     {
-        
+        PhotonNetwork.LoadLevel(sceneName);
     }
 }
