@@ -19,8 +19,13 @@ public class CKB_PlayerMove : MonoBehaviourPun
     CharacterController cc;
     CKB_Player player;
 
+    private Animator anim;  //+(예지) animator 추가
+  
+
     void Start()
     {
+        //+(예지) animator 추가
+        anim = GetComponentInChildren<Animator>();
         cc = GetComponent<CharacterController>();
         player = GetComponent<CKB_Player>();
     }
@@ -36,6 +41,11 @@ public class CKB_PlayerMove : MonoBehaviourPun
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
+        
+        //+(예지) animator 추가
+        anim.SetFloat("Speed", v);
+        anim.SetFloat("Direction", h);
+
         Vector3 vec = new Vector3(h, 0, v);
 
         // 걷기 애니메이션에 vec.magnitude 사용
@@ -48,6 +58,7 @@ public class CKB_PlayerMove : MonoBehaviourPun
         {
             yVelocity = 0;
             isJumping = false;
+            anim.SetTrigger("Move");
         }
         else
         {
@@ -58,6 +69,7 @@ public class CKB_PlayerMove : MonoBehaviourPun
         {
             yVelocity = jumpPower;
             isJumping = true;
+            anim.SetTrigger("Jump");
         }
 
         dir.y = yVelocity;

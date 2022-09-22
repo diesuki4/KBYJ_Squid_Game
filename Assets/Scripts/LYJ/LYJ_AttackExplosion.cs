@@ -35,7 +35,7 @@ public class LYJ_AttackExplosion : MonoBehaviourPun
 
                 if (rb != null)
                 {
-                    rb.isKinematic = false;
+                    // rb.isKinematic = false;
 
                     if (noUp)
                     {

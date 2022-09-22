@@ -50,7 +50,7 @@ public class LYJ_TimerLobby : MonoBehaviour
         {
             timeToDisplay = 0;
         }
-        print("min: " + min + "sec: " + sec);
+        // print("min: " + min + "sec: " + sec);
 
         // Debug.Log((int)timeValue);
         ledBoard.LedText = string.Format(" 0{0}", min);

@@ -58,19 +58,19 @@ public class CKB_UI_GameOver : MonoBehaviour
         ActiveAllUI(false);
 
         Color o_color = backgroundImage.color;
-
+        
         backgroundImage.color = new Color(255, 0, 0, 50) / 255;
-
+        
         backgroundImage.gameObject.SetActive(true);
-
+        
         ActiveCanvasGroup(true);
-
+        
         yield return new WaitForSeconds(duration);
-
+        
         ActiveCanvasGroup(false);
-
+        
         backgroundImage.color = o_color;
-
+        
         ActiveAllUI(true);
     }
 
@@ -79,6 +79,9 @@ public class CKB_UI_GameOver : MonoBehaviour
         if (CKB_GameManager.Instance.debugMode)
         {
             Debug.Log("[CKB_UI_GameOver] 부활 버튼 클릭");
+            
+            print("SceneManager.GetActiveScene().name" + SceneManager.GetActiveScene().name);
+            print("SceneManager.GetActiveScene().buildIndex: " + SceneManager.GetActiveScene().buildIndex);
 
             if (CKB_GameManager.Instance.photonMode)
                 PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().name);

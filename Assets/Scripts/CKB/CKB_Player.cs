@@ -6,10 +6,11 @@ using UnityEngine;
 public class CKB_Player : MonoBehaviour
 {
     public enum State
-    {
+    {   
         Alive = 1,
         Stop = 2,
-        Die = 4
+        Die = 4,
+        
     }
     [HideInInspector]
     public State state;
