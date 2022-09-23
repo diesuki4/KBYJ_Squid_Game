@@ -68,7 +68,11 @@ public class CKB_Player : MonoBehaviour
 
         CKB_UI_GameOver.Instance.PlayHitEffect();
         CKB_UI_GameOver.Instance.ShowGameOverUI(true);
+<<<<<<< Updated upstream
         
+=======
+
+>>>>>>> Stashed changes
         PhotonNetwork.Destroy(gameObject);
     }
 }

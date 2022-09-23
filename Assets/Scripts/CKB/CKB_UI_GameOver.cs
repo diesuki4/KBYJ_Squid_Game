@@ -90,17 +90,14 @@ public class CKB_UI_GameOver : MonoBehaviour
         }
     }
 
-    public void OnReturnLobbyButtonClick(string lobbySceneName)
+    public void OnReturnLobbyButtonClick()
     {
         if (CKB_GameManager.Instance.debugMode)
         {
             Debug.Log("[CKB_UI_GameOver] 로비로 돌아가기 버튼 클릭");
 
-            if (lobbySceneName != "")
-                if (CKB_GameManager.Instance.photonMode)
-                    PhotonNetwork.LoadLevel(lobbySceneName);
-                else
-                    SceneManager.LoadScene(lobbySceneName);
+            if (CKB_GameManager.Instance.photonMode)
+                PhotonNetwork.LoadLevel("WaitingroomScene");
         }
     }
 
