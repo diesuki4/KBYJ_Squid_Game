@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Photon.Pun;
 
-public class CKB_UI_GameOver : MonoBehaviour
+public class CKB_UI_GameOver : MonoBehaviourPunCallbacks
 {
     public static CKB_UI_GameOver Instance;
 
