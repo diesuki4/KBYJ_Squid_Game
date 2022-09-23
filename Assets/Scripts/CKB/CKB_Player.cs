@@ -68,5 +68,7 @@ public class CKB_Player : MonoBehaviour
 
         CKB_UI_GameOver.Instance.PlayHitEffect();
         CKB_UI_GameOver.Instance.ShowGameOverUI(true);
+        
+        PhotonNetwork.Destroy(gameObject);
     }
 }

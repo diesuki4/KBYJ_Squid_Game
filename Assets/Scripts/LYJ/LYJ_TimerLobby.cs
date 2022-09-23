@@ -37,12 +37,13 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         }
         else
         {
-            // timeValue += 100;
+            timeValue += 100;
             // State.End로 변환
-
             if (PhotonNetwork.IsMasterClient)
             {
-                photonView.RPC("RpcLoadLevel", RpcTarget.All);
+                PhotonNetwork.AutomaticallySyncScene = true;
+                PhotonNetwork.LoadLevel("Mugunghwa");
+                // photonView.RPC("RpcLoadLevel", RpcTarget.All);
             }
         }
         
