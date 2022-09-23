@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LYJ/WaitingroomScene.unity
     guid: a1186a2307fe9e940b2b4464c0806e3f
+  - enabled: 1
+    path: Assets/Scenes/LYJ/Mugunghwa.unity
+    guid: de7ebe976772bff4eb8683b3232218ad
   m_configObjects: {}
