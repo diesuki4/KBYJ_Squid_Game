@@ -67,7 +67,6 @@ public class LYJ_AttackManager : MonoBehaviour
         pushUI.GetComponent<Image>().enabled = false;
         baseballUI.GetComponent<Image>().enabled = false;
         
-        baseball.SetActive(false);
         anim.SetTrigger("Idle");
     }
 
@@ -76,6 +75,7 @@ public class LYJ_AttackManager : MonoBehaviour
         attackState = AttackState.Push;
         Debug.Log("attackState: " + attackState);
         pushUI.GetComponent<Image>().enabled = true;
+        baseball.SetActive(false);
         anim.SetTrigger("Push");
         
         // 밀치는 코드 Lerp
@@ -89,6 +89,12 @@ public class LYJ_AttackManager : MonoBehaviour
         
         //애니메이터
         baseball.SetActive(true);
+        // StartCoroutine("IENoBaseball");
+    }
+
+    IEnumerator IENoBaseball()
+    {
         anim.SetTrigger("Baseball");
+        yield return new WaitForSeconds(1);
     }
 }

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4005268132226734731}
   - component: {fileID: 16406571019801902}
   - component: {fileID: 2872943591507812836}
-  - component: {fileID: 3467537896216231292}
   m_Layer: 0
   m_Name: Cama
   m_TagString: Untagged
@@ -86,17 +85,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3467537896216231292
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4386016245986705457}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3819882041999889767, guid: 6b36dfb610653a44fb3e3b686ce5d3b5, type: 3}
