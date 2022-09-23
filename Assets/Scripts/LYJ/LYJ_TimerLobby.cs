@@ -20,6 +20,7 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
         ledBoard = GetComponent<LedBoardScript>();
     }
 
@@ -41,7 +42,6 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
             // State.End로 변환
             if (PhotonNetwork.IsMasterClient)
             {
-                PhotonNetwork.AutomaticallySyncScene = true;
                 PhotonNetwork.LoadLevel("Mugunghwa");
                 // photonView.RPC("RpcLoadLevel", RpcTarget.All);
             }
