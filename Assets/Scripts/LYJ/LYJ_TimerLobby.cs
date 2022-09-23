@@ -84,9 +84,10 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         }
     }
 
+    /*
     [PunRPC]
     private void RpcLoadLevel()
     {
         PhotonNetwork.LoadLevel("Mugunghwa");
-    }
+    }*/
 }
