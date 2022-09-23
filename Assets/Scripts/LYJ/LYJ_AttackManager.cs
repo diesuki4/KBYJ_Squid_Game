@@ -67,6 +67,7 @@ public class LYJ_AttackManager : MonoBehaviour
         pushUI.GetComponent<Image>().enabled = false;
         baseballUI.GetComponent<Image>().enabled = false;
         
+        baseball.SetActive(false);
         anim.SetTrigger("Idle");
     }
 
@@ -89,9 +90,11 @@ public class LYJ_AttackManager : MonoBehaviour
         
         //애니메이터
         baseball.SetActive(true);
+        anim.SetTrigger("Baseball");
         // StartCoroutine("IENoBaseball");
     }
 
+    // 이벤
     IEnumerator IENoBaseball()
     {
         anim.SetTrigger("Baseball");

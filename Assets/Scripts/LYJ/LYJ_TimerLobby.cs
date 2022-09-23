@@ -39,7 +39,11 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         {
             // timeValue += 100;
             // State.End로 변환
-            
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                photonView.RPC("RpcLoadLevel", RpcTarget.All);
+            }
         }
         
         DisplayTime(timeValue);
@@ -77,5 +81,11 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         {
             timeValue = (float)stream.ReceiveNext();
         }
+    }
+
+    [PunRPC]
+    private void RpcLoadLevel()
+    {
+        PhotonNetwork.LoadLevel("Mugunghwa");
     }
 }
