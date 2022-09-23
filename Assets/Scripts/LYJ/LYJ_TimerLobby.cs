@@ -41,8 +41,8 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
             // State.End로 변환
             if (PhotonNetwork.IsMasterClient)
             {
-                PhotonNetwork.LoadLevel("Mugunghwa");
-                // photonView.RPC("RpcLoadLevel", RpcTarget.All);
+                // PhotonNetwork.LoadLevel("Mugunghwa");
+                photonView.RPC("RpcLoadLevel", RpcTarget.All);
             }
         }
         
@@ -83,10 +83,9 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         }
     }
 
-    /*
     [PunRPC]
     private void RpcLoadLevel()
     {
         PhotonNetwork.LoadLevel("Mugunghwa");
-    }*/
+    }
 }
