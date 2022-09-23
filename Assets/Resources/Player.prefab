@@ -6315,6 +6315,7 @@ GameObject:
   - component: {fileID: 2792011506406664505}
   - component: {fileID: 2792011506406664504}
   - component: {fileID: 2792011506406664511}
+  - component: {fileID: 1254703974983150711}
   - component: {fileID: 4378790673847668340}
   - component: {fileID: 4044640862185040172}
   - component: {fileID: 2792011506406664510}
@@ -6396,6 +6397,21 @@ MonoBehaviour:
   rotSpeedX: 80
   rotSpeedY: 200
   maxRotX: 8
+--- !u!114 &1254703974983150711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2792011506406664496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b0124fe8f2aa8f46adc01c4639649c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lastPos: {x: 0, y: 0, z: 0}
+  lastRot: {x: 0, y: 0, z: 0}
+  isMoving: 0
 --- !u!114 &4378790673847668340
 MonoBehaviour:
   m_ObjectHideFlags: 0
