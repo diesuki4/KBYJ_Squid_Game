@@ -20,7 +20,6 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
         ledBoard = GetComponent<LedBoardScript>();
     }
 
