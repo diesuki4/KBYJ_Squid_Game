@@ -2611,7 +2611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  yeonghee: {fileID: 2044300583}
+  yeongheeState: {fileID: 2044300586}
 --- !u!1 &2030679015
 GameObject:
   m_ObjectHideFlags: 0
