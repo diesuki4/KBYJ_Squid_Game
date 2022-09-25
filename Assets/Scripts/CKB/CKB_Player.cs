@@ -27,6 +27,7 @@ public class CKB_Player : MonoBehaviour
     public float dieFlyAwayTorque;
 
     Rigidbody rb;
+    // public Animator anim;
 
     void Start()
     {
@@ -50,6 +51,7 @@ public class CKB_Player : MonoBehaviour
     public void Die(DieType dieType)
     {
         state = State.Die;
+        // anim.SetTrigger("Die");
 
         Camera.main.transform.SetParent(null);
 

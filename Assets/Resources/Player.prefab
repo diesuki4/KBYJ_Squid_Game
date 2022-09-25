@@ -6446,6 +6446,7 @@ MonoBehaviour:
   state: 0
   dieFlyAwayForce: 30
   dieFlyAwayTorque: 1000
+  anim: {fileID: 9595486, guid: 1162c77862daddb40872e1b420853773, type: 3}
 --- !u!114 &2792011506406664504
 MonoBehaviour:
   m_ObjectHideFlags: 0
