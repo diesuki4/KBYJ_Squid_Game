@@ -287,6 +287,7 @@ MonoBehaviour:
   moveSpeed: 5
   jumpPower: 4
   gravityFactor: 1.5
+  onClimbing: 0
 --- !u!114 &8054210475399384452
 MonoBehaviour:
   m_ObjectHideFlags: 0
