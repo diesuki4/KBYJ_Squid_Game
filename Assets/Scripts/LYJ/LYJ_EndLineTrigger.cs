@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class LYJ_EndLineTrigger : MonoBehaviour
 {
     public GameObject player;
-    public GameObject yeonghee;
+    public LYJ_YeongHeeState yeongheeState;
     private bool isCounted;
     
     // Start is called before the first frame update
@@ -25,7 +26,7 @@ public class LYJ_EndLineTrigger : MonoBehaviour
     {
         if (other.gameObject == player && isCounted == false)
         {
-            yeonghee.GetComponent<LYJ_YeongHeeState>().playerEndCount++;
+            yeongheeState.CountUp();
             isCounted = true;
         }
     }

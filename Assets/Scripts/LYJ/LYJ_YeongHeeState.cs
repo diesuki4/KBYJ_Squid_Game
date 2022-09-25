@@ -182,7 +182,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
             
             if (PhotonNetwork.IsMasterClient == false)
             {
-                photonView.RPC("RpcCountUp", RpcTarget.MasterClient);
+                CountUp();
                 state = State.End;
             }
             else
@@ -236,6 +236,11 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
         }
     }
 
+    public void CountUp()
+    {
+        photonView.RPC("RpcCountUp", RpcTarget.MasterClient);
+    }
+    
     [PunRPC]
     private void RpcCountUp()
     {
