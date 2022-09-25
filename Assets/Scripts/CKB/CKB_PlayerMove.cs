@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class CKB_PlayerMove : MonoBehaviourPun
     CKB_Player player;
 
     private Animator anim;  //+(예지) animator 추가
-  
+    public bool onClimbing;
 
     void Start()
     {
@@ -70,6 +71,18 @@ public class CKB_PlayerMove : MonoBehaviourPun
             yVelocity = jumpPower;
             isJumping = true;
             anim.SetTrigger("Jump");
+        }
+
+        if (onClimbing)
+        {
+            // print("onClimbing");
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            {
+                anim.SetTrigger("Ladder");
+                v = 0;
+                yVelocity += 0.1f;
+            }
+            
         }
 
         dir.y = yVelocity;

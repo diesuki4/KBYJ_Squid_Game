@@ -28,6 +28,7 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
     {
         if (timeValue > 0)
         {
+            // ☆ 1 방장한테만 카운트다운이 흐르고
             if (PhotonNetwork.IsMasterClient)
             {
                 timeValue -= Time.deltaTime; // 프레임 == 60프레임에 1초 => 
@@ -39,6 +40,7 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         {
             timeValue += 100;
             // State.End로 변환
+            // ☆ 3 00:00이 되면 방장이 다른 참가자들의 RpcLevel함수를 실행시킨다
             if (PhotonNetwork.IsMasterClient)
             {
                 // PhotonNetwork.LoadLevel("Mugunghwa");
@@ -71,6 +73,7 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         // ledBoard.LedText = string.Format(" {0:D2} : {0:D2} ", min, sec);
     }
 
+    // ☆ 2 방장의 시간만 업데이트 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (PhotonNetwork.IsMasterClient)
@@ -83,6 +86,7 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         }
     }
 
+    // ☆ 4 무궁화씬으로 전환
     [PunRPC]
     private void RpcLoadLevel()
     {
