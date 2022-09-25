@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class CKB_SHTGameManager : MonoBehaviour
+public class CKB_SHTGameManager : MonoBehaviourPun
 {
     public static CKB_SHTGameManager Instance;
 
@@ -32,6 +33,7 @@ public class CKB_SHTGameManager : MonoBehaviour
     public float inGameTime;
 
     public CKB_Player player;
+    public Transform spawnPositions;
 
     float currentTime;
 
@@ -39,6 +41,11 @@ public class CKB_SHTGameManager : MonoBehaviour
 
     void Start()
     {
+        int index = UnityEngine.Random.Range(0, spawnPositions.childCount);
+        Transform tr = spawnPositions.GetChild(index);
+
+        player = PhotonNetwork.Instantiate("Player", tr.position, tr.rotation).GetComponent<CKB_Player>();
+
         state = State.Idle;
 
         agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();
