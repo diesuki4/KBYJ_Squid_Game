@@ -1290,8 +1290,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   randomPos: {fileID: 604999142}
-  yeoungHeeState: {fileID: 0}
-  endLineTrigger: {fileID: 0}
+  yeoungHeeState: {fileID: 2044300586}
+  endLineTrigger: {fileID: 2028684501}
 --- !u!1 &1024909632
 GameObject:
   m_ObjectHideFlags: 0
