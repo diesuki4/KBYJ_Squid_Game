@@ -61,7 +61,6 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
         state = State.Mugunghwa;
         // state = State.Idle;
         
-        CreatingRandomValue();
         canvasMugunghwa.SetActive(false);
         canvasTimer.SetActive(false);
         canvasBloom.SetActive(false);
@@ -72,6 +71,8 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
     void Update()
     {
         // Debug.Log("targetForAttack: " + targetForAttack);
+        Debug.Log("playerEndCount: " + playerEndCount);
+        
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -104,17 +105,13 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
         }
     }
 
-    
-    private void CreatingRandomValue()
+    [PunRPC]
+    void RPCSetRandomValue(int mugunghwaTime)
     {
-        /* 무궁화 꽃이 피었습니다 랜덤 시간 */
-        // 1 2~7 초 사이에 랜덤 값을 뽑아서
-        // 2 MugunghwaTime / bloomTime 변수에 넣어준다
-        mugunghwaTime = UnityEngine.Random.Range(2, 7);
+        this.mugunghwaTime = mugunghwaTime;
         rayTime = mugunghwaTime - 1;
-        // Debug.Log("mugunghwaTime" + mugunghwaTime);
     }
-
+    
     private void UpdateIdle()
     {
         /* 대기화면 */
@@ -132,6 +129,13 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
     
     private void UpdateMugunghwa()
     {
+        
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // photonView.RPC("CreatingRandomValue", RpcTarget.MasterClient);
+            photonView.RPC("RPCSetRandomValue", RpcTarget.All, Random.Range(2, 7));
+        }
+        
         // Debug.Log("state = State.Mugunghwa");
         canvasTimer.SetActive(true);
         
