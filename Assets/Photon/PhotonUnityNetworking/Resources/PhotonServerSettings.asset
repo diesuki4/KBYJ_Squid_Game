@@ -45,6 +45,8 @@ MonoBehaviour:
   - RpcCountUp
   - RpcLoadScene
   - RPCSetRandomValue
+  - SetBridgeGravity
+  - SetUsingGravityArray
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

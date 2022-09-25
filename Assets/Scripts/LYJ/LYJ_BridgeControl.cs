@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class LYJ_BridgeControl : MonoBehaviour
+public class LYJ_BridgeControl : MonoBehaviourPun
 {
     public bool[] usingGravityS = new bool[22];
     GameObject[] scaffoldingS = new GameObject[22];
@@ -12,17 +13,23 @@ public class LYJ_BridgeControl : MonoBehaviour
     {
         Physics.gravity = new Vector3(0, -70, 0);
 
-        CreateRandomValue();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            CreateRandomValue();
+            photonView.RPC("SetUsingGravityArray", RpcTarget.All, usingGravityS);
+        }
 
         BringGameObject();
 
-        for (int i = 0; i < scaffoldingS.Length; i++)
-        {
-            scaffoldingS[i].GetComponent<LYJ_Bridge>().usingGravity = usingGravityS[i];
-            // Debug.Log(scaffoldingS[i].GetComponent<LYJ_Bridge>());
-        }
+        SetBridgeGravity();
     }
 
+    [PunRPC]
+    private void SetUsingGravityArray(bool[] usingGravityS)
+    {
+        this.usingGravityS = usingGravityS;
+    }
+    
     private void CreateRandomValue()
     {
         Debug.Log("usingGravityS.Length: " + usingGravityS.Length);
@@ -80,6 +87,16 @@ public class LYJ_BridgeControl : MonoBehaviour
             // [] 0 ~ 21 / game object: 1 ~ 22
             scaffoldingS[y] = GameObject.Find("Scaffolding (" + i + ")");
             // Debug.Log("scaffoldingS[" + y + "]: " + scaffoldingS[y]);
+        }
+    }
+    
+    [PunRPC]
+    private void SetBridgeGravity()
+    {
+        for (int i = 0; i < scaffoldingS.Length; i++)
+        {
+            scaffoldingS[i].GetComponent<LYJ_Bridge>().usingGravity = usingGravityS[i];
+            // Debug.Log(scaffoldingS[i].GetComponent<LYJ_Bridge>());
         }
     }
 }

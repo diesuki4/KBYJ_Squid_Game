@@ -277,7 +277,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         }
         else
         {
-            PhotonNetwork.LoadLevel("CKB_SHTGameScene");
+            PhotonNetwork.LoadLevel("BridgeScene");
             isEnd = true;
         }
     }
