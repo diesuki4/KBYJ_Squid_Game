@@ -244,7 +244,17 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
     [PunRPC]
     private void RpcLoadScene()
     {
-        PhotonNetwork.LoadLevel("CKB_SHTGameScene");
-        isEnd = true;
+        if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LeaveLobby();
+            PhotonNetwork.Disconnect();
+            Application.Quit();
+        }
+        else
+        {
+            PhotonNetwork.LoadLevel("CKB_SHTGameScene");
+            isEnd = true;
+        }
     }
 }
