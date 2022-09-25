@@ -130,7 +130,6 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
         CKB_UI_TextDialogue.Instance.onComplete = () => { state = State.Mugunghwa; };
     }
     
-
     private void UpdateMugunghwa()
     {
         // Debug.Log("state = State.Mugunghwa");
@@ -175,9 +174,16 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
         if (currentTime >= rayTime && targetForAttack)
         {
             player.GetComponent<LYJ_AttackExplosion>().AttackExplosion(_playerMoveDetect.lastPos, power, radius, upForce);
-            photonView.RPC("RpcCountUp", RpcTarget.MasterClient);
             
-            state = State.End;
+            if (PhotonNetwork.IsMasterClient == false)
+            {
+                photonView.RPC("RpcCountUp", RpcTarget.MasterClient);
+                state = State.End;
+            }
+            else
+            {
+                playerEndCount++;
+            }
         }
     }
 
@@ -209,7 +215,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
         }
         
         /* 움직임 감지 */
-        if (_playerMoveDetect.isMoving && LYJ_TriggerGround.Instance.insideLine)
+        if (_playerMoveDetect.isMoving && player.GetComponent<LYJ_MGPlayerInsideline>().insideLine)
         {
             targetForAttack = true;
         }

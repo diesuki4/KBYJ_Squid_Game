@@ -6,7 +6,7 @@ using UnityEngine;
 public class LYJ_TriggerGround : MonoBehaviour
 {
     public static LYJ_TriggerGround Instance;
-
+    
     void Awake()
     {
         if (Instance == null)
@@ -15,13 +15,11 @@ public class LYJ_TriggerGround : MonoBehaviour
             Destroy(this);
     }
     
-    public bool insideLine;
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name.Contains("Player"))
         {
-            insideLine = true;
+            other.GetComponent<LYJ_MGPlayerInsideline>().insideLine = true;
         }
     }
 
@@ -29,7 +27,7 @@ public class LYJ_TriggerGround : MonoBehaviour
     {
         if (other.gameObject.name.Contains("Player"))
         {
-            insideLine = false;
+            other.GetComponent<LYJ_MGPlayerInsideline>().insideLine = false;
         }
     }
 }
