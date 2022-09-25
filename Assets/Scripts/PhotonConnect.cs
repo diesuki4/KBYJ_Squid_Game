@@ -83,6 +83,6 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
         
-        PhotonNetwork.LoadLevel("BridgeScene");
+        PhotonNetwork.LoadLevel("WaitingroomScene");
     }
 }
