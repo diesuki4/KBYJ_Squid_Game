@@ -8,6 +8,7 @@ public class LYJ_BridgeControl : MonoBehaviourPunCallbacks
 {
     public bool[] usingGravityS = new bool[22];
     GameObject[] scaffoldingS = new GameObject[22];
+    bool isCreated;
     
     // Start is called before the first frame update
     void Start()
@@ -18,13 +19,15 @@ public class LYJ_BridgeControl : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
-        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        if (PhotonNetwork.IsMasterClient)
         {
-            CreateRandomValue();
+            if (isCreated == false)
+            {
+                CreateRandomValue();
+                isCreated = true;
+            }
+            photonView.RPC("SetUsingGravityArray", RpcTarget.All, usingGravityS);
         }
-
-        photonView.RPC("SetUsingGravityArray", RpcTarget.All, usingGravityS);
-
     }
 
     [PunRPC]

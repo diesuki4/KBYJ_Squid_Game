@@ -12,6 +12,9 @@ public class BridgeGameManager : MonoBehaviourPun
     private GameObject player;
     public Transform randomPos;
     public GameObject ground;
+    public LYJ_BREndLineTrigger endLineTrigger;
+
+    private int endPlayerCount;
     
     private void Awake()
     {
@@ -24,6 +27,7 @@ public class BridgeGameManager : MonoBehaviourPun
         player = PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
     
         ground.GetComponent<LYJ_BridgeDie>().player = player;
+        endLineTrigger.player = player;
 
     }
 
@@ -36,6 +40,18 @@ public class BridgeGameManager : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-        
+        if (endPlayerCount == PhotonNetwork.CurrentRoom.PlayerCount)
+            ;
+    }
+
+    public void CountUp()
+    {
+        photonView.RPC("RpcCountUp", RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    private void RpcCountUp()
+    {
+        endPlayerCount++;
     }
 }
