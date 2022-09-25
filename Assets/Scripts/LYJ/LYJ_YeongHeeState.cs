@@ -238,6 +238,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         {
             if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
             {
+                isEnd = true;
                 PhotonNetwork.LeaveRoom();
                 PhotonNetwork.LeaveLobby();
                 PhotonNetwork.Disconnect();
