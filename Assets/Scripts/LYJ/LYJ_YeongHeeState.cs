@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class LYJ_YeongHeeState : MonoBehaviour
+public class LYJ_YeongHeeState : MonoBehaviourPun
 {
     #region randomTime
     private float currentTime;
@@ -35,6 +36,8 @@ public class LYJ_YeongHeeState : MonoBehaviour
 
     public GameObject player;
 
+    private int playerEndCount;
+    private bool isEnd;
     
     /* 상태머신 */
     public enum State
@@ -69,6 +72,15 @@ public class LYJ_YeongHeeState : MonoBehaviour
     void Update()
     {
         // Debug.Log("targetForAttack: " + targetForAttack);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (playerEndCount == PhotonNetwork.CurrentRoom.PlayerCount)
+            {
+                // 게임 종료
+                state = State.End;
+            }
+        }
         
         switch (state)
         {
@@ -163,6 +175,8 @@ public class LYJ_YeongHeeState : MonoBehaviour
         if (currentTime >= rayTime && targetForAttack)
         {
             player.GetComponent<LYJ_AttackExplosion>().AttackExplosion(_playerMoveDetect.lastPos, power, radius, upForce);
+            photonView.RPC("RpcCountUp", RpcTarget.MasterClient);
+            
             state = State.End;
         }
     }
@@ -205,5 +219,22 @@ public class LYJ_YeongHeeState : MonoBehaviour
     {
         Debug.Log("state = State.End");
         // 다음 씬 로드
+        if (PhotonNetwork.IsMasterClient && isEnd == false)
+        {
+            photonView.RPC("RpcLoadScene", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    private void RpcCountUp()
+    {
+        playerEndCount++;
+    }
+
+    [PunRPC]
+    private void RpcLoadScene()
+    {
+        PhotonNetwork.LoadLevel("CKB_SHTGameScene");
+        isEnd = true;
     }
 }

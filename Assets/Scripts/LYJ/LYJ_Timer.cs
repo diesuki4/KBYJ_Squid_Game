@@ -9,6 +9,7 @@ public class LYJ_Timer : MonoBehaviour
     public float timeValue = 5;
     public TextMeshProUGUI timerText;
     
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +29,8 @@ public class LYJ_Timer : MonoBehaviour
             // State.End로 변환
             LYJ_YeongHeeState lyjState = LYJ_YeongHee.Instance.GetComponent<LYJ_YeongHeeState>();
             lyjState.state = LYJ_YeongHeeState.State.End;
+         
+            // ++ 시간내 못끝냈을 때 보내는 거
         }
         
         DisplayTime(timeValue);
