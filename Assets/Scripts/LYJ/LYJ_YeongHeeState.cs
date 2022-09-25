@@ -178,6 +178,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
         if (currentTime >= rayTime && targetForAttack)
         {
             player.GetComponent<LYJ_AttackExplosion>().AttackExplosion(_playerMoveDetect.lastPos, power, radius, upForce);
+            targetForAttack = false;
             
             if (PhotonNetwork.IsMasterClient == false)
             {

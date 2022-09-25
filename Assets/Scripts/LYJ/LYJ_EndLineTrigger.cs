@@ -7,6 +7,7 @@ public class LYJ_EndLineTrigger : MonoBehaviour
 {
     public GameObject player;
     public GameObject yeonghee;
+    private bool isCounted;
     
     // Start is called before the first frame update
     void Start()
@@ -22,9 +23,10 @@ public class LYJ_EndLineTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == player)
+        if (other.gameObject == player && isCounted == false)
         {
             yeonghee.GetComponent<LYJ_YeongHeeState>().playerEndCount++;
+            isCounted = true;
         }
     }
 }
