@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
-public class LYJ_YeongHeeState : MonoBehaviourPun
+public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
 {
     #region randomTime
     private float currentTime;
@@ -38,6 +39,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
 
     public int playerEndCount;
     private bool isEnd;
+    public bool isTargeted;
     
     /* 상태머신 */
     public enum State
@@ -172,6 +174,8 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
             crosshair.SetActive(true);
             crosshair.transform.position = new Vector3(_playerMoveDetect.lastPos.x, _playerMoveDetect.lastPos.y + 2.5f, _playerMoveDetect.lastPos.z);
             crosshair.transform.eulerAngles = _playerMoveDetect.lastRot;
+
+            isTargeted = true;
         }
 
         // 3 끝나기 1초전에 쏜다 
@@ -232,7 +236,13 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
         // 다음 씬 로드
         if (PhotonNetwork.IsMasterClient && isEnd == false)
         {
-            photonView.RPC("RpcLoadScene", RpcTarget.All);
+            if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LeaveLobby();
+                PhotonNetwork.Disconnect();
+                Application.Quit();
+            }
         }
     }
 
@@ -245,6 +255,13 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
     private void RpcCountUp()
     {
         playerEndCount++;
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        base.OnMasterClientSwitched(newMasterClient);
+
+        RpcLoadScene();
     }
 
     [PunRPC]

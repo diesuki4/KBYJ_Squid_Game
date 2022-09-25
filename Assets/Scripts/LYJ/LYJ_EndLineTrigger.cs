@@ -24,7 +24,7 @@ public class LYJ_EndLineTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == player && isCounted == false)
+        if (other.gameObject == player && isCounted == false && yeongheeState.isTargeted == false)
         {
             yeongheeState.CountUp();
             isCounted = true;
