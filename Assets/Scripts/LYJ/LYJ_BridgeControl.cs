@@ -18,16 +18,15 @@ public class LYJ_BridgeControl : MonoBehaviourPun
             CreateRandomValue();
             photonView.RPC("SetUsingGravityArray", RpcTarget.All, usingGravityS);
         }
-
-        BringGameObject();
-
-        SetBridgeGravity();
     }
 
     [PunRPC]
     private void SetUsingGravityArray(bool[] usingGravityS)
     {
         this.usingGravityS = usingGravityS;
+        
+        BringGameObject();
+        SetBridgeGravity();
     }
     
     private void CreateRandomValue()
