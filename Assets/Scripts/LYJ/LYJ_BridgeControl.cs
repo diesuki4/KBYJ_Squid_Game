@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
-public class LYJ_BridgeControl : MonoBehaviourPun
+public class LYJ_BridgeControl : MonoBehaviourPunCallbacks
 {
     public bool[] usingGravityS = new bool[22];
     GameObject[] scaffoldingS = new GameObject[22];
@@ -12,12 +13,18 @@ public class LYJ_BridgeControl : MonoBehaviourPun
     void Start()
     {
         Physics.gravity = new Vector3(0, -70, 0);
+    }
 
-        if (PhotonNetwork.IsMasterClient)
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
             CreateRandomValue();
-            photonView.RPC("SetUsingGravityArray", RpcTarget.All, usingGravityS);
         }
+
+        photonView.RPC("SetUsingGravityArray", RpcTarget.All, usingGravityS);
+
     }
 
     [PunRPC]
