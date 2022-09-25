@@ -244,6 +244,10 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
                 PhotonNetwork.Disconnect();
                 Application.Quit();
             }
+            else
+            {
+                photonView.RPC("RpcLoadScene", RpcTarget.All);
+            }
         }
     }
 
