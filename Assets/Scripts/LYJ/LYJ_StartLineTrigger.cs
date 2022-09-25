@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LYJ_BedTrigger : MonoBehaviour
+public class LYJ_StartLineTrigger : MonoBehaviour
 {
     public Animator anim;
     public GameObject player;

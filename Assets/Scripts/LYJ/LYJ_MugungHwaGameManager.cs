@@ -6,14 +6,16 @@ using UnityEngine;
 public class LYJ_MugungHwaGameManager : MonoBehaviour
 {
     public Transform randomPos;
-    public GameObject yeoungHee;
+    public LYJ_YeongHeeState yeoungHeeState;
+    public LYJ_EndLineTrigger endLineTrigger;
     
     // Start is called before the first frame update
     void Start()
     {
         Transform trRandom = randomPos.GetChild(Random.Range(0, randomPos.childCount));
         GameObject player = PhotonNetwork.Instantiate("Player", trRandom.position, trRandom.rotation);
-        yeoungHee.GetComponent<LYJ_YeongHeeState>().player = player;
+        yeoungHeeState.player = player;
+        endLineTrigger.player = player;
     }
 
     // Update is called once per frame

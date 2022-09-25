@@ -36,7 +36,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
 
     public GameObject player;
 
-    private int playerEndCount;
+    public int playerEndCount;
     private bool isEnd;
     
     /* 상태머신 */
@@ -133,7 +133,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPun
         if (PhotonNetwork.IsMasterClient)
         {
             // photonView.RPC("CreatingRandomValue", RpcTarget.MasterClient);
-            photonView.RPC("RPCSetRandomValue", RpcTarget.All, Random.Range(2, 7));
+            photonView.RPC("RPCSetRandomValue", RpcTarget.All, Random.Range(4, 7));
         }
         
         // Debug.Log("state = State.Mugunghwa");
