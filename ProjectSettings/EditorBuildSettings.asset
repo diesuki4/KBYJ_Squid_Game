@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LYJ/BridgeScene.unity
     guid: e9ba6655a06d51f4a804e3b46214a161
+  - enabled: 1
+    path: Assets/Scenes/CKB/CKB_SHTGameScene.unity
+    guid: f967e043e05457f499e17fa75784dcaa
   m_configObjects: {}

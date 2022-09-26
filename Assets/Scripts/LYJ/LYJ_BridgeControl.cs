@@ -4,7 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class LYJ_BridgeControl : MonoBehaviourPun
+public class LYJ_BridgeControl : MonoBehaviourPun, IPunObservable
 {
     public bool[] usingGravityS = new bool[22];
     GameObject[] scaffoldingS = new GameObject[22];

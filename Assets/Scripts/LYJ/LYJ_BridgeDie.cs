@@ -17,7 +17,8 @@ public class LYJ_BridgeDie : MonoBehaviour
     public float upForce = 0.1f;
     #endregion
 
-    public GameObject player; 
+    public GameObject player;
+    public BridgeGameManager bridgeGM;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +41,8 @@ public class LYJ_BridgeDie : MonoBehaviour
         {
             other.GetComponent<LYJ_AttackExplosion>().photonView.RPC(
                 "AttackExplosion", RpcTarget.All, _playerMoveDetect.lastPos, power, radius, upForce);
+            
+            bridgeGM.CountUp();
         }
     }
 }

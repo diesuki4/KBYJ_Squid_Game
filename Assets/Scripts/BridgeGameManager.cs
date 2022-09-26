@@ -15,6 +15,7 @@ public class BridgeGameManager : MonoBehaviourPun
     public LYJ_BREndLineTrigger endLineTrigger;
 
     private int endPlayerCount;
+    private bool isEnd;
     
     private void Awake()
     {
@@ -40,8 +41,25 @@ public class BridgeGameManager : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-        if (endPlayerCount == PhotonNetwork.CurrentRoom.PlayerCount)
-            ;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (endPlayerCount == PhotonNetwork.CurrentRoom.PlayerCount)
+            {
+                if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die && isEnd == false)
+                {
+                    isEnd = true;
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LeaveLobby();
+                    PhotonNetwork.Disconnect();
+                    Application.Quit();
+                }
+                else
+                {
+                    photonView.RPC("RpcLoadScene", RpcTarget.All);
+                }
+            }
+            
+        }
     }
 
     public void CountUp()
@@ -53,5 +71,22 @@ public class BridgeGameManager : MonoBehaviourPun
     private void RpcCountUp()
     {
         endPlayerCount++;
+    }
+
+    [PunRPC]
+    private void RpcLoadScene()
+    {
+        if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LeaveLobby();
+            PhotonNetwork.Disconnect();
+            Application.Quit();
+        }
+        else
+        {
+            PhotonNetwork.LoadLevel("CKB_SHTGameScene");
+            isEnd = true;
+        }
     }
 }
