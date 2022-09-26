@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = System.Random;
 
-public class BridgeGameManager : MonoBehaviourPun
+public class BridgeGameManager : MonoBehaviourPunCallbacks
 {
     private GameObject player;
     public Transform randomPos;
@@ -41,6 +41,7 @@ public class BridgeGameManager : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
+        print("endPlayerCount: " + endPlayerCount);
         if (PhotonNetwork.IsMasterClient)
         {
             if (endPlayerCount == PhotonNetwork.CurrentRoom.PlayerCount)
@@ -73,6 +74,14 @@ public class BridgeGameManager : MonoBehaviourPun
         endPlayerCount++;
     }
 
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        base.OnMasterClientSwitched(newMasterClient);
+
+        RpcLoadScene();
+    }
+
+    
     [PunRPC]
     private void RpcLoadScene()
     {

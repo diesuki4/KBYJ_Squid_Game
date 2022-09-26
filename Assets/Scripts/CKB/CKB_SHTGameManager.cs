@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Realtime;
 
-public class CKB_SHTGameManager : MonoBehaviourPun
+public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
 {
     public static CKB_SHTGameManager Instance;
 
@@ -234,4 +235,12 @@ public class CKB_SHTGameManager : MonoBehaviourPun
     {
         playerEndCount++;
     }
+    
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        base.OnMasterClientSwitched(newMasterClient);
+
+        RpcLoadScene();
+    }
+
 }
