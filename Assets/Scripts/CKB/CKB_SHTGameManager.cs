@@ -94,17 +94,20 @@ public class CKB_SHTGameManager : MonoBehaviourPun
     {
         if (PhotonNetwork.IsMasterClient && isEnd == false)
         {
-            if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+            if (playerEndCount == PhotonNetwork.CurrentRoom.PlayerCount)
             {
-                isEnd = true;
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LeaveLobby();
-                PhotonNetwork.Disconnect();
-                Application.Quit();
-            }
-            else
-            {
-                photonView.RPC("RpcLoadScene", RpcTarget.All);
+                if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+                {
+                    isEnd = true;
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LeaveLobby();
+                    PhotonNetwork.Disconnect();
+                    Application.Quit();
+                }
+                else
+                {
+                    photonView.RPC("RpcLoadScene", RpcTarget.All);
+                }
             }
         }
     }
