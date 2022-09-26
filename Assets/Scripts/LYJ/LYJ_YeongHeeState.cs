@@ -172,7 +172,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         {
             // 2 타깃 위에 crosshair 표시하고
             crosshair.SetActive(true);
-            crosshair.transform.position = new Vector3(_playerMoveDetect.lastPos.x, _playerMoveDetect.lastPos.y + 2.5f, _playerMoveDetect.lastPos.z);
+            crosshair.transform.position = new Vector3(_playerMoveDetect.lastPos.x, _playerMoveDetect.lastPos.y + 8f, _playerMoveDetect.lastPos.z);
             crosshair.transform.eulerAngles = _playerMoveDetect.lastRot;
 
             isTargeted = true;
