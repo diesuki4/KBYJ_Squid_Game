@@ -59,7 +59,7 @@ public class CKB_MarbleGameManager : MonoBehaviour
 
         agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();
         Transform tr = trRandom.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
-        player = PhotonNetwork.Instantiate("Player", tr.position, tr.rotation).GetComponent<CKB_Player>();
+        player = PhotonNetwork.Instantiate("PlayerSHT", tr.position, tr.rotation).GetComponent<CKB_Player>();
     }
 
     void Update()
