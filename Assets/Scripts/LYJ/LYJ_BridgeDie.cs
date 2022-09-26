@@ -37,8 +37,9 @@ public class LYJ_BridgeDie : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name.Contains("Player"))
+        if (other.gameObject == player)
         {
+            print("countUp");
             other.GetComponent<LYJ_AttackExplosion>().photonView.RPC(
                 "AttackExplosion", RpcTarget.All, _playerMoveDetect.lastPos, power, radius, upForce);
             

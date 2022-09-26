@@ -8,7 +8,7 @@ public class LYJ_BREndLineTrigger : MonoBehaviour
     public GameObject player;
 
     private bool isCounted;
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == player && isCounted == false)
