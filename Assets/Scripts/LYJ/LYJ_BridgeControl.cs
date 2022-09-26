@@ -4,42 +4,38 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class LYJ_BridgeControl : MonoBehaviourPun, IPunInstantiateMagicCallback
+public class LYJ_BridgeControl : MonoBehaviourPun
 {
     public bool[] usingGravityS = new bool[22];
     GameObject[] scaffoldingS = new GameObject[22];
-    bool isCreated;
     
     // Start is called before the first frame update
     void Start()
     {
         Physics.gravity = new Vector3(0, -70, 0);
-    }
 
-    public void OnPhotonInstantiate(PhotonMessageInfo info)
-    {
-        // throw new System.NotImplementedException();
-        print("OnPhotonInstantiate");
+        BringGameObject();
+
         if (PhotonNetwork.IsMasterClient)
         {
-            if (isCreated == false)
-            {
-                CreateRandomValue();
-                isCreated = true;
-            }
-            photonView.RPC("SetUsingGravityArray", RpcTarget.All, usingGravityS);
+            CreateRandomValue();
+            SetBridgeGravity();
         }
     }
 
-    [PunRPC]
-    private void SetUsingGravityArray(bool[] usingGravityS)
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        this.usingGravityS = usingGravityS;
-        
-        BringGameObject();
-        SetBridgeGravity();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            stream.SendNext(usingGravityS);
+        }
+        else
+        {
+            usingGravityS = (bool[])stream.ReceiveNext();
+            SetBridgeGravity();
+        }
     }
-    
+
     private void CreateRandomValue()
     {
         Debug.Log("usingGravityS.Length: " + usingGravityS.Length);
@@ -100,7 +96,6 @@ public class LYJ_BridgeControl : MonoBehaviourPun, IPunInstantiateMagicCallback
         }
     }
     
-    [PunRPC]
     private void SetBridgeGravity()
     {
         for (int i = 0; i < scaffoldingS.Length; i++)
