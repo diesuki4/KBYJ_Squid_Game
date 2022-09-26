@@ -37882,6 +37882,7 @@ GameObject:
   - component: {fileID: 837464363}
   - component: {fileID: 837464362}
   - component: {fileID: 837464361}
+  - component: {fileID: 837464365}
   m_Layer: 0
   m_Name: EndLineTrigger
   m_TagString: Untagged
@@ -37967,6 +37968,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &837464365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837464360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9bcd775049a7db48af7d6a61ce169bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brGameManager: {fileID: 1935237938}
+  player: {fileID: 0}
 --- !u!21 &837761234
 Material:
   serializedVersion: 8
@@ -51747,8 +51762,6 @@ GameObject:
   - component: {fileID: 1146390070}
   - component: {fileID: 1146390069}
   - component: {fileID: 1146390068}
-  - component: {fileID: 1146390071}
-  - component: {fileID: 1146390072}
   m_Layer: 0
   m_Name: polySurface356
   m_TagString: Untagged
@@ -51837,33 +51850,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1146390066}
   m_Mesh: {fileID: 6448369909150514172, guid: 4190511c5e60ab34d9e06d49f77c2437, type: 3}
---- !u!65 &1146390071
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1146390066}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 6.3189, y: 0.77807283, z: 10.634803}
-  m_Center: {x: 1.8152502, y: 0.08903594, z: 0.0008735657}
---- !u!114 &1146390072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1146390066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9bcd775049a7db48af7d6a61ce169bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  brGameManager: {fileID: 1935237938}
-  player: {fileID: 0}
 --- !u!1 &1150152476
 GameObject:
   m_ObjectHideFlags: 0
@@ -92069,7 +92055,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomPos: {fileID: 716423075}
   ground: {fileID: 1701985292}
-  endLineTrigger: {fileID: 0}
+  endLineTrigger: {fileID: 837464365}
 --- !u!114 &1935237939
 MonoBehaviour:
   m_ObjectHideFlags: 0
