@@ -25,7 +25,8 @@ public class CKB_SHTGameManager : MonoBehaviourPun
         Result = 16,
         Alive = 32,
         Die = 64,
-        End = 128
+        End = 128,
+        allEnd = 256,
     }
     State state;
 
@@ -39,12 +40,16 @@ public class CKB_SHTGameManager : MonoBehaviourPun
 
     Animator agentAnim;
 
+    private int playerEndCount;
+    private bool isEnd;
+
     void Start()
     {
         int index = UnityEngine.Random.Range(0, spawnPositions.childCount);
         Transform tr = spawnPositions.GetChild(index);
 
         player = PhotonNetwork.Instantiate("Player", tr.position, tr.rotation).GetComponent<CKB_Player>();
+        player.transform.localScale = Vector3.one * 0.5f;
 
         state = State.Idle;
 
@@ -76,7 +81,48 @@ public class CKB_SHTGameManager : MonoBehaviourPun
                 UpdateDie();
                 break;
             case State.End :
+                UpdateEnd();
                 break;
+            case State.allEnd :
+                break;
+        }
+
+        EndDetect();
+    }
+
+    private void EndDetect()
+    {
+        if (PhotonNetwork.IsMasterClient && isEnd == false)
+        {
+            if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+            {
+                isEnd = true;
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LeaveLobby();
+                PhotonNetwork.Disconnect();
+                Application.Quit();
+            }
+            else
+            {
+                photonView.RPC("RpcLoadScene", RpcTarget.All);
+            }
+        }
+    }
+    
+    [PunRPC]
+    private void RpcLoadScene()
+    {
+        if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LeaveLobby();
+            PhotonNetwork.Disconnect();
+            Application.Quit();
+        }
+        else
+        {
+            PhotonNetwork.LoadLevel("CKB_MarbleGameScene");
+            isEnd = true;
         }
     }
 
@@ -164,7 +210,26 @@ public class CKB_SHTGameManager : MonoBehaviourPun
 
         if (CKB_GameManager.Instance.debugMode)
             Debug.Log("[CKB_SHTGameManager] 죽었습니다!!");
-
+        
         state = State.End;
+    }
+
+    private void UpdateEnd()
+    {
+        // PlayerEndCount 증가
+        CountUp();
+        
+        state = State.allEnd;
+    }
+
+    public void CountUp()
+    {
+        photonView.RPC("RPCCountUp", RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    private void RPCCountUp()
+    {
+        playerEndCount++;
     }
 }

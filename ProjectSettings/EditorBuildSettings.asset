@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CKB/CKB_SHTGameScene.unity
     guid: f967e043e05457f499e17fa75784dcaa
+  - enabled: 1
+    path: Assets/Scenes/CKB/CKB_MarbleGameScene.unity
+    guid: 6ee927588f7d9d74c9357ff3a1b6fabf
   m_configObjects: {}
