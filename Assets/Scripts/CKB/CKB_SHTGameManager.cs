@@ -48,8 +48,7 @@ public class CKB_SHTGameManager : MonoBehaviourPun
         int index = UnityEngine.Random.Range(0, spawnPositions.childCount);
         Transform tr = spawnPositions.GetChild(index);
 
-        player = PhotonNetwork.Instantiate("Player", tr.position, tr.rotation).GetComponent<CKB_Player>();
-        player.transform.localScale = Vector3.one * 0.5f;
+        player = PhotonNetwork.Instantiate("PlayerSHT", tr.position, tr.rotation).GetComponent<CKB_Player>();
 
         state = State.Idle;
 
