@@ -4,7 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class LYJ_BridgeControl : MonoBehaviourPunCallbacks
+public class LYJ_BridgeControl : MonoBehaviourPun, IPunInstantiateMagicCallback
 {
     public bool[] usingGravityS = new bool[22];
     GameObject[] scaffoldingS = new GameObject[22];
@@ -16,9 +16,9 @@ public class LYJ_BridgeControl : MonoBehaviourPunCallbacks
         Physics.gravity = new Vector3(0, -70, 0);
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        base.OnPlayerEnteredRoom(newPlayer);
+        throw new System.NotImplementedException();
         if (PhotonNetwork.IsMasterClient)
         {
             if (isCreated == false)
