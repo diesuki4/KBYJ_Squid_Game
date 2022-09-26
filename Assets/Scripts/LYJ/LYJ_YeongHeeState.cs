@@ -60,8 +60,8 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         yeongHeeHead = GetComponentInChildren<LYJ_YeongHee>();
         _playerMoveDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
 
-        state = State.Mugunghwa;
-        // state = State.Idle;
+        // state = State.Mugunghwa;
+        state = State.Idle;
         
         canvasMugunghwa.SetActive(false);
         canvasTimer.SetActive(false);
