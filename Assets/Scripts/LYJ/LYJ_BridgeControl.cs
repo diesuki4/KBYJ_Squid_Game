@@ -18,7 +18,8 @@ public class LYJ_BridgeControl : MonoBehaviourPun, IPunInstantiateMagicCallback
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        throw new System.NotImplementedException();
+        // throw new System.NotImplementedException();
+        print("OnPhotonInstantiate");
         if (PhotonNetwork.IsMasterClient)
         {
             if (isCreated == false)
