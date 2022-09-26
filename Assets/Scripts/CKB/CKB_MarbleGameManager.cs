@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class CKB_MarbleGameManager : MonoBehaviour
@@ -50,11 +51,15 @@ public class CKB_MarbleGameManager : MonoBehaviour
 
     Animator agentAnim;
 
+    public Transform trRandom;
+
     void Start()
     {
         state = State.Idle;
 
         agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();
+        Transform tr = trRandom.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
+        player = PhotonNetwork.Instantiate("Player", tr.position, tr.rotation).GetComponent<CKB_Player>();
     }
 
     void Update()
