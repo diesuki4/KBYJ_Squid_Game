@@ -43,8 +43,7 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
             // ☆ 3 00:00이 되면 방장이 다른 참가자들의 RpcLevel함수를 실행시킨다
             if (PhotonNetwork.IsMasterClient)
             {
-                // PhotonNetwork.LoadLevel("Mugunghwa");
-                photonView.RPC("RpcLoadLevel", RpcTarget.All);
+                PhotonNetwork.LoadLevel("Mugunghwa");
             }
         }
         
@@ -84,12 +83,5 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         {
             timeValue = (float)stream.ReceiveNext();
         }
-    }
-
-    // ☆ 4 무궁화씬으로 전환
-    [PunRPC]
-    private void RpcLoadLevel()
-    {
-        PhotonNetwork.LoadLevel("Mugunghwa");
     }
 }

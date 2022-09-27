@@ -13,10 +13,4 @@ public class WaitingroomManager : MonoBehaviour
         Transform randomTr = trPos.GetChild(Random.Range(0, trPos.childCount));
         PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
     }
-    
-    [PunRPC]
-    private void RpcLoadLevel(string sceneName)
-    {
-        PhotonNetwork.LoadLevel(sceneName);
-    }
 }
