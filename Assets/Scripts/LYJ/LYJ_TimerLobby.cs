@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
 
 public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
@@ -9,18 +10,17 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
 
     #region LEDTimer import
     private string LedText;
-    private LedBoardScript ledBoard;
     #endregion
 
     #region time
     private int min;
     private int sec;
+    public TextMeshProUGUI timer;
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
-        ledBoard = GetComponent<LedBoardScript>();
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         }
         
         DisplayTime(timeValue);
-        ledBoard.BoardConstructor();
+        // ledBoard.BoardConstructor();
     }
 
     void DisplayTime(float timeToDisplay)
@@ -59,15 +59,15 @@ public class LYJ_TimerLobby : MonoBehaviourPun, IPunObservable
         }
         // print("min: " + min + "sec: " + sec);
         // Debug.Log((int)timeValue);
-        ledBoard.LedText = string.Format(" 0{0}", min);
+        timer.text = string.Format(" 0{0}", min);
 
         if (sec < 10)
         {
-            ledBoard.LedText += string.Format(":0{0} ", sec);
+            timer.text += string.Format(":0{0} ", sec);
         }
         else
         {
-            ledBoard.LedText += string.Format(":{00} ", sec);
+            timer.text += string.Format(":{00} ", sec);
         }
         // ledBoard.LedText = string.Format(" {0:D2} : {0:D2} ", min, sec);
     }
