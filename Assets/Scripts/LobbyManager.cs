@@ -32,7 +32,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public void OnClickStartButton()
     {
         if (PhotonNetwork.IsMasterClient)
-            PhotonNetwork.LoadLevel("Mugunghwa");
+            PhotonNetwork.LoadLevel("WaitingroomScene");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
