@@ -84247,12 +84247,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6277345974563465094}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 358bd87d1edb037478a785af77bd03b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   timeValue: 100
+  timer: {fileID: 0}
 --- !u!21 &2142217410
 Material:
   serializedVersion: 8
@@ -85497,7 +85498,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6277345974563465094}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5c6ae7f593cac743b5c62f711a81a4e, type: 3}
   m_Name: 
