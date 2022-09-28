@@ -10,7 +10,7 @@ public class WaitingroomManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Transform randomTr = trPos.GetChild(Random.Range(0, trPos.childCount));
+        Transform randomTr = trPos.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
         PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
     }
 }

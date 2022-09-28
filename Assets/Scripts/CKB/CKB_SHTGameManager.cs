@@ -46,8 +46,7 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        int index = UnityEngine.Random.Range(0, spawnPositions.childCount);
-        Transform tr = spawnPositions.GetChild(index);
+        Transform tr = spawnPositions.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
 
         player = PhotonNetwork.Instantiate("PlayerSHT", tr.position, tr.rotation).GetComponent<CKB_Player>();
 

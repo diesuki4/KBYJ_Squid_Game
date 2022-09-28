@@ -23,7 +23,7 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
         /*Transform[] randomPosS = randomPos.GetComponentsInChildren<Transform>();
         int randomNum = UnityEngine.Random.Range(0, maxPlayer);
         Transform randomTr = randomPosS[randomNum];*/
-        Transform randomTr = randomPos.GetChild(UnityEngine.Random.Range(0, randomPos.childCount));
+        Transform randomTr = randomPos.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
 
         player = PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
     

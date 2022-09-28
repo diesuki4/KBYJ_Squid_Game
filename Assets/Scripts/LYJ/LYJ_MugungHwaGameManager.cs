@@ -12,7 +12,7 @@ public class LYJ_MugungHwaGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Transform trRandom = randomPos.GetChild(Random.Range(0, randomPos.childCount));
+        Transform trRandom = randomPos.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
         GameObject player = PhotonNetwork.Instantiate("Player", trRandom.position, trRandom.rotation);
         yeoungHeeState.player = player;
         endLineTrigger.player = player;
