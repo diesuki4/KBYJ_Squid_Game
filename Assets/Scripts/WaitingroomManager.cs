@@ -13,23 +13,22 @@ public class WaitingroomManager : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
-        Transform randomTr = trPos.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
-        go = PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
+        go = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
 
-        uniqueValue = Random.Range(float.MinValue, float.MaxValue);
+        uniqueValue = Random.Range(float.MinValue, float.MaxValue); // 1 player -> master
         photonView.RPC("AddPlayerCount", RpcTarget.MasterClient, uniqueValue);
     }
 
     [PunRPC]
     void AddPlayerCount(float unqValue)
     {
-        photonView.RPC("SetPlayerPosition", RpcTarget.All, playerCount++, unqValue);
+        photonView.RPC("SetPlayerPosition", RpcTarget.All, playerCount++, unqValue);    // 2 master -> all
     }
 
     [PunRPC]
     void SetPlayerPosition(int count, float unqValue)
     {
-        if (Mathf.Approximately(uniqueValue, unqValue))
+        if (Mathf.Approximately(uniqueValue, unqValue)) // 3 unqValue 내가 방장한테 보낸 거 확인하는 용도
             go.transform.position = trPos.GetChild(count).position;
     }
 }
