@@ -80163,6 +80163,7 @@ MonoBehaviour:
   canvasBloom: {fileID: 1220671807}
   crosshair: {fileID: 336137644}
   canvasTimer: {fileID: 973401455}
+  yeongHeeHead: {fileID: 1910326448}
   power: 10
   radius: 5
   upForce: 1
@@ -80264,7 +80265,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 2044300586}
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0

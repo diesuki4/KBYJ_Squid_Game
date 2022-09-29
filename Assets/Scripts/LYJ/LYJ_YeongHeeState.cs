@@ -26,7 +26,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region attack
-    private LYJ_YeongHee yeongHeeHead;
+    public GameObject yeongHeeHead;
     #endregion
 
     #region playerDead
@@ -44,17 +44,28 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks, IPunObservable
     private bool isRandomValueCreated;
     private bool isCanvasTimerActive;
     private bool isCanvasMugunghwaActive;
-    
+    private bool isCanvasBloomActive;
+    private bool isCrosshairActive;
+
+    #region relatedYeongHee
+    private float headTime = 2;
+    private float curTime;
+    #endregion
+
     /* 상태머신 */
     public enum State
     {
         Idle = 1,
         Conversation = 2,
         Initialize = 4,
-        Mugunghwa = 8,
-        Bloom = 16,
-        Die = 32,
-        End = 64,
+        TurnYhNeck = 8,
+        UIInitialize = 32,
+        Bloom = 64,
+        Detect = 128,
+        Target = 256,
+        Attack = 512,
+        Die = 1024,
+        End = 2048,
     }
 
     public State state;
@@ -62,10 +73,8 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
-        yeongHeeHead = GetComponentInChildren<LYJ_YeongHee>();
         _playerMoveDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
 
-        // state = State.Mugunghwa;
         state = State.Idle;
         
         canvasMugunghwa.SetActive(false);
@@ -78,7 +87,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks, IPunObservable
     void Update()
     {
         // Debug.Log("targetForAttack: " + targetForAttack);
-        Debug.Log("playerEndCount: " + playerEndCount);
+        // Debug.Log("playerEndCount: " + playerEndCount);
         
 
         if (PhotonNetwork.IsMasterClient)
@@ -92,6 +101,8 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks, IPunObservable
         
         canvasTimer.SetActive(isCanvasTimerActive);
         canvasMugunghwa.SetActive(isCanvasMugunghwaActive);
+        canvasBloom.SetActive(isCanvasBloomActive);
+        crosshair.SetActive(isCrosshairActive);
         
         switch (state)
         {
@@ -103,18 +114,30 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks, IPunObservable
             case State.Initialize:
                 UpdateInitialize();
                 break;
-            case State.Mugunghwa:
-                UpdateMugunghwa();
+            case State.TurnYhNeck:
+                UpdateTurnYhNeck();
+                break;
+            case State.UIInitialize:
+                UpdateUIInitialize(state);
                 break;
             case State.Bloom:
                 UpdateBloom();
+                break;/*
+            case State.Detect:
+                UpdateDetect();
+                break;
+            case State.Target:
+                UpdateTarget();
+                break;
+            case State.Attack:
+                UpdateAttack();
                 break;
             case State.Die:
                 // UpdateDie();
                 break;
             case State.End:
                 UpdateEnd();
-                break;
+                break;*/
         }
     }
 
@@ -134,67 +157,106 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                photonView.RPC("RpcChangeState", RpcTarget.All, State.Initialize);
+                // photonView.RPC("RpcChangeState", RpcTarget.All, State.Initialize);
+                state = State.Initialize;
             }
         };
     }
 
     private void UpdateInitialize()
     {
-        // this.mugunghwaTime = mugunghwaTime;
         mugunghwaTime = Random.Range(4, 7);
         rayTime = mugunghwaTime - 1;
 
-        state = State.Mugunghwa;
+        state = State.TurnYhNeck;
     }
 
-    private void UpdateMugunghwa()
+    private void UpdateUIInitialize(State state)
+    {
+        isCanvasMugunghwaActive = false;
+        targetForAttack = false;
+        isCrosshairActive = false;
+
+        this.state = state;
+    }
+
+    private void UpdateTurnYhNeck()
     {
         /* UI 표시 */
-        // 1 시간이 흐르고
-        if (PhotonNetwork.IsMasterClient)
-        {
-            isCanvasTimerActive = true;
-            currentTime += Time.deltaTime;
+        // if (PhotonNetwork.IsMasterClient)
+        // {
+        isCanvasTimerActive = true;
+        currentTime += Time.deltaTime;
             
-            // 2 mugunghwaTime 이 될 때까지
-            if (currentTime < mugunghwaTime)
-            {
-                // 3 관련 UI를 표시한다
-                isCanvasMugunghwaActive = true;
-
-                if (currentTime <= 1)
-                {
-                    /* 영희 머리 돌아가기 */
-                    yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 180, 0), new Vector3(0, 0, 0),  currentTime);
-                }
-            }
+        // 2 mugunghwaTime 이 될 때까지
+        if (currentTime < mugunghwaTime)
+        {
+            // 3 관련 UI를 표시한다
+            isCanvasMugunghwaActive = true;
+            
+            // 함수 실행
+            /* 영희 머리 돌아가기 */
+            if (currentTime <= 1)
+                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 180, 0), currentTime);        
         }
         else
         {
             currentTime = 0;
-            
-            canvasMugunghwa.SetActive(false);
-            // isCanvasMugunghwaActive = false;
-            targetForAttack = false;
-            crosshair.SetActive(false);
-            
-            photonView.RPC("RpcChangeState", RpcTarget.All, State.Bloom);
-            // state = State.Bloom;
+            // photonView.RPC("RpcChangeState", RpcTarget.All, State.Bloom);
+            UpdateUIInitialize(State.Bloom);
         }
-        
-        /* 공격 */
+        // }
         // 1 만약 타깃이 되면
-        if (targetForAttack == true)
+        /*if (targetForAttack == true)
         {
-            // 2 타깃 위에 crosshair 표시하고
-            crosshair.SetActive(true);
-            crosshair.transform.position = new Vector3(_playerMoveDetect.lastPos.x + 0.7f, _playerMoveDetect.lastPos.y + 2.5f, _playerMoveDetect.lastPos.z);
-            crosshair.transform.eulerAngles = _playerMoveDetect.lastRot;
+            state = State.Attack;
+        }*/
+    }
 
-            isTargeted = true;
+    private void UpdateBloom()
+    {
+        // Debug.Log("state = State.Bloom");
+        
+        /* 피었습니다 */
+        // 1 시간이 흐르고
+
+        // if (PhotonNetwork.IsMasterClient)
+        // {
+        currentTime += Time.deltaTime;
+        // 2 bloomTime 이 될 때까지
+        if (currentTime < bloomTime)
+        {
+            // print(currentTime);
+            // 3 관련 UI를 표시한다
+            isCanvasBloomActive = true;
+
+            if (currentTime <= 1)
+                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 180, 0), new Vector3(0, 0, 0), currentTime);
         }
+        else
+        {
+            currentTime = 0;
+            isCanvasBloomActive = false;
+            state = State.TurnYhNeck;
+        }
+        // }
+        state = State.Detect;
+    }
 
+    private void UpdateTarget()
+    {
+        // 2 타깃 위에 crosshair 표시하고
+        crosshair.SetActive(true);
+        crosshair.transform.position = new Vector3(_playerMoveDetect.lastPos.x + 0.7f, _playerMoveDetect.lastPos.y + 2.5f, _playerMoveDetect.lastPos.z);
+        crosshair.transform.eulerAngles = _playerMoveDetect.lastRot;
+
+        isTargeted = true;
+
+        state = State.Attack;
+    }
+
+    private void UpdateAttack()
+    {
         // 3 끝나기 1초전에 쏜다 
         if (currentTime >= rayTime && targetForAttack)
         {
@@ -213,37 +275,9 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    private void UpdateBloom()
-    {
-        // Debug.Log("state = State.Bloom");
-        
-        /* 피었습니다 */
-        // 1 시간이 흐르고
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            currentTime += Time.deltaTime;
-            // 2 bloomTime 이 될 때까지
-            if (currentTime < bloomTime)
-            {
-                // print(currentTime);
-                // 3 관련 UI를 표시한다
-                canvasBloom.SetActive(true);
-                
-                if (currentTime <= 1)
-                {
-                    /* 영희 머리 돌아가기 */
-                    yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 180, 0),  currentTime);
-                }
-            }
-            else
-            {
-                currentTime = 0;
-                canvasBloom.SetActive(false);
-                state = State.Mugunghwa;
-            }
-        }
-        
+    private void UpdateDetect()
+    {
         /* 움직임 감지 */
         if (_playerMoveDetect.isMoving && player.GetComponent<LYJ_MGPlayerInsideline>().insideLine)
         {
