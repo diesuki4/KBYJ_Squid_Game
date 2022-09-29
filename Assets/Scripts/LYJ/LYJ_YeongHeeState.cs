@@ -40,6 +40,8 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
     public int playerEndCount;
     private bool isEnd;
     public bool isTargeted;
+
+    private bool isRandomValueCreated;
     
     /* 상태머신 */
     public enum State
@@ -107,8 +109,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
-    void RPCSetRandomValue(int mugunghwaTime)
+    void SetRandomValue(int mugunghwaTime)
     {
         this.mugunghwaTime = mugunghwaTime;
         rayTime = mugunghwaTime - 1;
@@ -132,10 +133,11 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
     private void UpdateMugunghwa()
     {
         
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && isRandomValueCreated == false)
         {
+            isRandomValueCreated = true;
             // photonView.RPC("CreatingRandomValue", RpcTarget.MasterClient);
-            photonView.RPC("RPCSetRandomValue", RpcTarget.All, Random.Range(4, 7));
+            SetRandomValue(Random.Range(4, 7));
         }
         
         // Debug.Log("state = State.Mugunghwa");
@@ -143,17 +145,21 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         
         /* UI 표시 */
         // 1 시간이 흐르고
-        currentTime += Time.deltaTime;
-        // 2 mugunghwaTime 이 될 때까지
-        if (currentTime < mugunghwaTime)
+        if (PhotonNetwork.IsMasterClient)
         {
-            // 3 관련 UI를 표시한다
-            canvasMugunghwa.SetActive(true);
-
-            if (currentTime <= 1)
+            currentTime += Time.deltaTime;
+            
+            // 2 mugunghwaTime 이 될 때까지
+            if (currentTime < mugunghwaTime)
             {
-                /* 영희 머리 돌아가기 */
-                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 180, 0), new Vector3(0, 0, 0),  currentTime);
+                // 3 관련 UI를 표시한다
+                canvasMugunghwa.SetActive(true);
+
+                if (currentTime <= 1)
+                {
+                    /* 영희 머리 돌아가기 */
+                    yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 180, 0), new Vector3(0, 0, 0),  currentTime);
+                }
             }
         }
         else
@@ -163,7 +169,9 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
             canvasMugunghwa.SetActive(false);
             targetForAttack = false;
             crosshair.SetActive(false);
-            state = State.Bloom;
+            
+            photonView.RPC("RpcChangeState", RpcTarget.All, State.Bloom);
+            // state = State.Bloom;
         }
         
         /* 공격 */
@@ -284,5 +292,11 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel("BridgeScene");
             isEnd = true;
         }
+    }
+
+    [PunRPC]
+    private void RpcChangeState(State state)
+    {
+        this.state = state;
     }
 }
