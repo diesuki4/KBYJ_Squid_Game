@@ -4,7 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
+public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks, IPunObservable
 {
     #region randomTime
     private float currentTime;
@@ -42,16 +42,19 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
     public bool isTargeted;
 
     private bool isRandomValueCreated;
+    private bool isCanvasTimerActive;
+    private bool isCanvasMugunghwaActive;
     
     /* 상태머신 */
     public enum State
     {
-        Idle,
-        Conversation,
-        Mugunghwa,
-        Bloom,
-        Die,
-        End,
+        Idle = 1,
+        Conversation = 2,
+        Initialize = 4,
+        Mugunghwa = 8,
+        Bloom = 16,
+        Die = 32,
+        End = 64,
     }
 
     public State state;
@@ -87,12 +90,18 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
             }
         }
         
+        canvasTimer.SetActive(isCanvasTimerActive);
+        canvasMugunghwa.SetActive(isCanvasMugunghwaActive);
+        
         switch (state)
         {
             case State.Idle:
                 UpdateIdle();
                 break;
             case State.Conversation:
+                break;
+            case State.Initialize:
+                UpdateInitialize();
                 break;
             case State.Mugunghwa:
                 UpdateMugunghwa();
@@ -109,12 +118,6 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         }
     }
 
-    void SetRandomValue(int mugunghwaTime)
-    {
-        this.mugunghwaTime = mugunghwaTime;
-        rayTime = mugunghwaTime - 1;
-    }
-    
     private void UpdateIdle()
     {
         /* 대기화면 */
@@ -131,35 +134,34 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                photonView.RPC("RpcChangeState", RpcTarget.All, State.Mugunghwa);
+                photonView.RPC("RpcChangeState", RpcTarget.All, State.Initialize);
             }
         };
     }
-    
+
+    private void UpdateInitialize()
+    {
+        // this.mugunghwaTime = mugunghwaTime;
+        mugunghwaTime = Random.Range(4, 7);
+        rayTime = mugunghwaTime - 1;
+
+        state = State.Mugunghwa;
+    }
+
     private void UpdateMugunghwa()
     {
-        
-        if (PhotonNetwork.IsMasterClient && isRandomValueCreated == false)
-        {
-            isRandomValueCreated = true;
-            // photonView.RPC("CreatingRandomValue", RpcTarget.MasterClient);
-            SetRandomValue(Random.Range(4, 7));
-        }
-        
-        // Debug.Log("state = State.Mugunghwa");
-        canvasTimer.SetActive(true);
-        
         /* UI 표시 */
         // 1 시간이 흐르고
         if (PhotonNetwork.IsMasterClient)
         {
+            isCanvasTimerActive = true;
             currentTime += Time.deltaTime;
             
             // 2 mugunghwaTime 이 될 때까지
             if (currentTime < mugunghwaTime)
             {
                 // 3 관련 UI를 표시한다
-                canvasMugunghwa.SetActive(true);
+                isCanvasMugunghwaActive = true;
 
                 if (currentTime <= 1)
                 {
@@ -173,6 +175,7 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
             currentTime = 0;
             
             canvasMugunghwa.SetActive(false);
+            // isCanvasMugunghwaActive = false;
             targetForAttack = false;
             crosshair.SetActive(false);
             
@@ -216,25 +219,29 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         
         /* 피었습니다 */
         // 1 시간이 흐르고
-        currentTime += Time.deltaTime;
-        // 2 bloomTime 이 될 때까지
-        if (currentTime < bloomTime)
+
+        if (PhotonNetwork.IsMasterClient)
         {
-            // print(currentTime);
-            // 3 관련 UI를 표시한다
-            canvasBloom.SetActive(true);
-            
-            if (currentTime <= 1)
+            currentTime += Time.deltaTime;
+            // 2 bloomTime 이 될 때까지
+            if (currentTime < bloomTime)
             {
-                /* 영희 머리 돌아가기 */
-                yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 180, 0),  currentTime);
+                // print(currentTime);
+                // 3 관련 UI를 표시한다
+                canvasBloom.SetActive(true);
+                
+                if (currentTime <= 1)
+                {
+                    /* 영희 머리 돌아가기 */
+                    yeongHeeHead.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 180, 0),  currentTime);
+                }
             }
-        }
-        else
-        {
-            currentTime = 0;
-            canvasBloom.SetActive(false);
-            state = State.Mugunghwa;
+            else
+            {
+                currentTime = 0;
+                canvasBloom.SetActive(false);
+                state = State.Mugunghwa;
+            }
         }
         
         /* 움직임 감지 */
@@ -304,5 +311,20 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
     private void RpcChangeState(State state)
     {
         this.state = state;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            stream.SendNext(isCanvasTimerActive);
+            stream.SendNext(isCanvasMugunghwaActive);
+            
+        }
+        else
+        {
+            isCanvasTimerActive = (bool)stream.ReceiveNext();
+            isCanvasMugunghwaActive = (bool)stream.ReceiveNext();
+        }
     }
 }
