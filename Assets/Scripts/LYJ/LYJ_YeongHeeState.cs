@@ -129,7 +129,10 @@ public class LYJ_YeongHeeState : MonoBehaviourPunCallbacks
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
         CKB_UI_TextDialogue.Instance.onComplete = () =>
         {
-            photonView.RPC("RpcChangeState", RpcTarget.All, State.Mugunghwa);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                photonView.RPC("RpcChangeState", RpcTarget.All, State.Mugunghwa);
+            }
         };
     }
     
