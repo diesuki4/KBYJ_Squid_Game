@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
-public class CKB_MarbleGameManager : MonoBehaviour
+public class CKB_MarbleGameManager : MonoBehaviourPun
 {
     public static CKB_MarbleGameManager Instance;
 
@@ -43,8 +43,9 @@ public class CKB_MarbleGameManager : MonoBehaviour
     [HideInInspector]
     public int selection;
 
+    GameObject goPlayer;
     public CKB_Player player;
-
+    
     int answerMarbleCount;
     int currentRound;
     float currentTime;
@@ -52,6 +53,7 @@ public class CKB_MarbleGameManager : MonoBehaviour
     Animator agentAnim;
 
     public Transform trRandom;
+    public Transform trRandomAgent;
 
     void Start()
     {
@@ -60,6 +62,48 @@ public class CKB_MarbleGameManager : MonoBehaviour
         agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();
         Transform tr = trRandom.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
         player = PhotonNetwork.Instantiate("PlayerSHT", tr.position, tr.rotation).GetComponent<CKB_Player>();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    int playerCount;
+    float uniqueValue;
+/*
+    // Start is called before the first frame update
+    void Start()
+    {
+        go = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+
+        uniqueValue = Random.Range(float.MinValue, float.MaxValue);
+        photonView.RPC("AddPlayerCount", RpcTarget.MasterClient, uniqueValue);
+    }
+*/
+    [PunRPC]
+    void AddPlayerCount(float unqValue)
+    {
+        photonView.RPC("SetPlayerPosition", RpcTarget.All, playerCount++, unqValue);
+    }
+
+    [PunRPC]
+    void SetPlayerPosition(int count, float unqValue)
+    {
+        if (Mathf.Approximately(uniqueValue, unqValue))
+        {
+            goPlayer.transform.position = trRandom.GetChild(count).position;
+            agentAnim.transform.position = trRandomAgent.GetChild(count).position;
+        }
     }
 
     void Update()

@@ -34,25 +34,47 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
     [Header("달고나 게임 시간")]
     public float inGameTime;
 
+    GameObject goPlayer;
     public CKB_Player player;
     public Transform spawnPositions;
+    public Transform spawnPositionsAgent;
 
     float currentTime;
 
     Animator agentAnim;
 
-    private int playerEndCount;
-    private bool isEnd;
+    int playerCount;
+    int playerEndCount;
+    bool isEnd;
+    float uniqueValue;
 
     void Start()
     {
-        Transform tr = spawnPositions.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
+        goPlayer = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        player = goPlayer.GetComponent<CKB_Player>();
 
-        player = PhotonNetwork.Instantiate("PlayerSHT", tr.position, tr.rotation).GetComponent<CKB_Player>();
+        uniqueValue = Random.Range(float.MinValue, float.MaxValue);
+        photonView.RPC("AddPlayerCount", RpcTarget.MasterClient, uniqueValue);
 
         state = State.Idle;
 
-        agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();
+        agentAnim = PhotonNetwork.Instantiate("Agent2", Vector3.zero, Quaternion.identity).GetComponent<Animator>();
+    }
+
+    [PunRPC]
+    void AddPlayerCount(float unqValue)
+    {
+        photonView.RPC("SetPlayerPosition", RpcTarget.All, playerCount++, unqValue);
+    }
+
+    [PunRPC]
+    void SetPlayerPosition(int count, float unqValue)
+    {
+        if (Mathf.Approximately(uniqueValue, unqValue))
+        {
+            goPlayer.transform.position = spawnPositions.GetChild(count).position;
+            agentAnim.transform.position = spawnPositionsAgent.GetChild(count).position;
+        }
     }
 
     void Update()
@@ -171,7 +193,7 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
                         state = State.Result;
 
                 if (CKB_SHTGameUIManager.Instance.IsAllDrawAreaVisible())
-                    state = State.Result;
+                    StartCoroutine(IESetState(State.Result, 0.5f));
             }
         }
         else
@@ -197,9 +219,6 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
 
     void UpdateAlive()
     {
-        if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_SHTGameManager] 살아남았습니다!!");
-
         state = State.End;
     }
 
@@ -209,19 +228,20 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
 
         player.Die(CKB_Player.DieType.FlyAway);
         state = State.End;
-
-        if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_SHTGameManager] 죽었습니다!!");
-        
-        state = State.End;
     }
 
-    private void UpdateEnd()
+    void UpdateEnd()
     {
         // PlayerEndCount 증가
         CountUp();
         
         state = State.allEnd;
+    }
+
+    IEnumerator IESetState(State state, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        this.state = state;
     }
 
     public void CountUp()
@@ -230,7 +250,7 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void RPCCountUp()
+    void RPCCountUp()
     {
         playerEndCount++;
     }
@@ -241,5 +261,4 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
 
         RpcLoadScene();
     }
-
 }
