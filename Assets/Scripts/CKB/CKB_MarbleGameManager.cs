@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
-public class CKB_MarbleGameManager : MonoBehaviourPun
+public class CKB_MarbleGameManager : MonoBehaviourPunCallbacks
 {
     public static CKB_MarbleGameManager Instance;
 
@@ -25,7 +26,8 @@ public class CKB_MarbleGameManager : MonoBehaviourPun
         Result = 32,
         Alive = 64,
         Die = 128,
-        End = 256
+        End = 256,
+        AllEnd = 512,
     }
     [HideInInspector]
     public State state;
@@ -55,55 +57,48 @@ public class CKB_MarbleGameManager : MonoBehaviourPun
     public Transform trRandom;
     public Transform trRandomAgent;
 
-    void Start()
-    {
-        state = State.Idle;
-
-        agentAnim = GameObject.Find("CKB/Agent").GetComponent<Animator>();
-        Transform tr = trRandom.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
-        player = PhotonNetwork.Instantiate("PlayerSHT", tr.position, tr.rotation).GetComponent<CKB_Player>();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     int playerCount;
+    int playerEndCount;
+    bool isEnd;
     float uniqueValue;
-/*
-    // Start is called before the first frame update
+
     void Start()
     {
-        go = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        goPlayer = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        player = goPlayer.GetComponent<CKB_Player>();
+
+        agentAnim = PhotonNetwork.Instantiate("Agent2", Vector3.zero, Quaternion.identity).GetComponent<Animator>();
 
         uniqueValue = Random.Range(float.MinValue, float.MaxValue);
-        photonView.RPC("AddPlayerCount", RpcTarget.MasterClient, uniqueValue);
-    }
-*/
-    [PunRPC]
-    void AddPlayerCount(float unqValue)
-    {
-        photonView.RPC("SetPlayerPosition", RpcTarget.All, playerCount++, unqValue);
+        photonView.RPC("RpcRequestSetPlayerPosition", RpcTarget.MasterClient, uniqueValue);
+
+        state = State.Idle;
     }
 
     [PunRPC]
-    void SetPlayerPosition(int count, float unqValue)
+    void RpcRequestSetPlayerPosition(float uniqueValue)
     {
-        if (Mathf.Approximately(uniqueValue, unqValue))
+        photonView.RPC("RpcSetPlayerPosition", RpcTarget.All, playerCount, uniqueValue);
+        photonView.RPC("RpcSetPlayerCount", RpcTarget.Others, ++playerCount);
+    }
+
+    [PunRPC]
+    void RpcSetPlayerPosition(int posIdx, float uniqueValue)
+    {
+        if (Mathf.Approximately(this.uniqueValue, uniqueValue))
         {
-            goPlayer.transform.position = trRandom.GetChild(count).position;
-            agentAnim.transform.position = trRandomAgent.GetChild(count).position;
+            goPlayer.transform.position = trRandom.GetChild(posIdx).position;
+            goPlayer.transform.rotation = trRandom.GetChild(posIdx).rotation;
+
+            agentAnim.transform.position = trRandomAgent.GetChild(posIdx).position;
+            agentAnim.transform.rotation = trRandomAgent.GetChild(posIdx).rotation;
         }
+    }
+
+    [PunRPC]
+    void RpcSetPlayerCount(int playerCount)
+    {
+        this.playerCount = playerCount;
     }
 
     void Update()
@@ -134,6 +129,9 @@ public class CKB_MarbleGameManager : MonoBehaviourPun
                 UpdateDie();
                 break;
             case State.End :
+                UpdateEnd();
+                break;
+            case State.AllEnd :
                 break;
         }
 
@@ -148,6 +146,31 @@ public class CKB_MarbleGameManager : MonoBehaviourPun
             {
                 Debug.Log("[CKB_MarbleGameManager] 생존 치트");
                 CKB_MarbleGameUIManager.Instance.SetUserMarbleText(userMarbleCount = 99);
+            }
+        }
+
+        EndDetect();
+    }
+
+    void EndDetect()
+    {
+        if (PhotonNetwork.IsMasterClient && isEnd == false)
+        {
+            if (playerEndCount == playerCount)
+            {
+                if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+                {
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LeaveLobby();
+                    PhotonNetwork.Disconnect();
+                    Application.Quit();
+                }
+                else
+                {
+                    PhotonNetwork.LoadLevel("CKB_ToWGameScene");
+                }
+
+                isEnd = true;
             }
         }
     }
@@ -265,5 +288,24 @@ public class CKB_MarbleGameManager : MonoBehaviourPun
 
         if (CKB_GameManager.Instance.debugMode)
             Debug.Log("[CKB_MarbleGameManager] 죽었습니다!!");
+    }
+
+    void UpdateEnd()
+    {
+        // PlayerEndCount 증가
+        AddEndCount();
+        
+        state = State.AllEnd;
+    }
+
+    public void AddEndCount()
+    {
+        photonView.RPC("RpcAddEndCount", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void RpcAddEndCount()
+    {
+        playerEndCount++;
     }
 }
