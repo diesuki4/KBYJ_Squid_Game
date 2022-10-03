@@ -2,8 +2,9 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class CKB_ToWGameManager : MonoBehaviour
+public class CKB_ToWGameManager : MonoBehaviourPun
 {
     public static CKB_ToWGameManager Instance;
 
@@ -41,7 +42,14 @@ public class CKB_ToWGameManager : MonoBehaviour
     [Header("줄의 최대 이동 거리 비율")]
     public float maxLineMoveRange;
 
+    GameObject goPlayer;
     public CKB_Player player;
+    public Transform spawnPositions;
+
+    int playerCount;
+    int playerEndCount;
+    bool isEnd;
+    float uniqueValue;
 
     int ourScore;
     int opponentScore;
@@ -57,9 +65,38 @@ public class CKB_ToWGameManager : MonoBehaviour
 
     void Start()
     {
+        goPlayer = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        player = goPlayer.GetComponent<CKB_Player>();
+
+        uniqueValue = Random.Range(float.MinValue, float.MaxValue);
+        photonView.RPC("RpcRequestSetPlayerPosition", RpcTarget.MasterClient, uniqueValue);
+
         line = GameObject.Find("Line").transform;
 
         state = State.Idle;
+    }
+
+    [PunRPC]
+    void RpcRequestSetPlayerPosition(float uniqueValue)
+    {
+        photonView.RPC("RpcSetPlayerPosition", RpcTarget.All, playerCount, uniqueValue);
+        photonView.RPC("RpcSetPlayerCount", RpcTarget.Others, ++playerCount);
+    }
+
+    [PunRPC]
+    void RpcSetPlayerPosition(int posIdx, float uniqueValue)
+    {
+        if (Mathf.Approximately(this.uniqueValue, uniqueValue))
+        {
+            goPlayer.transform.position = spawnPositions.GetChild(posIdx).position;
+            goPlayer.transform.rotation = spawnPositions.GetChild(posIdx).rotation;
+        }
+    }
+
+    [PunRPC]
+    void RpcSetPlayerCount(int playerCount)
+    {
+        this.playerCount = playerCount;
     }
 
     void Update()
@@ -88,6 +125,31 @@ public class CKB_ToWGameManager : MonoBehaviour
                 break;
             case State.End :
                 break;
+        }
+
+        EndDetect();
+    }
+
+    void EndDetect()
+    {
+        if (PhotonNetwork.IsMasterClient && isEnd == false)
+        {
+            if (playerEndCount == playerCount)
+            {
+                if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+                {
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LeaveLobby();
+                    PhotonNetwork.Disconnect();
+                    Application.Quit();
+                }
+                else
+                {
+                    PhotonNetwork.LoadLevel("CKB_MarbleGameScene");
+                }
+
+                isEnd = true;
+            }
         }
     }
 
