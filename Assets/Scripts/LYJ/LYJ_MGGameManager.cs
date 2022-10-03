@@ -204,12 +204,9 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void RpcGameStart()
     {
-        if (state == State.Conversation)
-        {
-            cube.SetActive(false);
-            isGameStarted = true;
-            state = State.Initialize;
-        }
+        cube.SetActive(false);
+        isGameStarted = true;
+        state = State.Initialize;
     }
 
     private void UpdateInitialize()
@@ -227,7 +224,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void RpcInitializeToCanMove()
     {
-        if (state == State.Initialize)
+        if ((state & (State.Target | State.Attack | State.Die | State.End | State.AllEnd)) == 0)
         {
             state = State.CanMove;
         }
@@ -251,7 +248,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void RpcCanMoveToBloom()
     {
-        if (state == State.CanMove)
+        if ((state & (State.Target | State.Attack | State.Die | State.End | State.AllEnd)) == 0)
         {
             LYJ_MGGameUIManager.Instance.ShowAllUITres(false);
             LYJ_MGGameUIManager.Instance.ShowBloom(true);
