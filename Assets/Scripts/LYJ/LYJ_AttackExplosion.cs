@@ -47,7 +47,7 @@ public class LYJ_AttackExplosion : MonoBehaviourPun
             }
         }
         // CKB_Player.Instance.Die();
-        GetComponent<CKB_Player>().Die(CKB_Player.DieType.Disassemble);
+        GetComponent<CKB_Player>().Die(CKB_Player.DieType.FlyAway);
         
         // 오류가 나면 이렇게 변경하세요 @!@!
     }

@@ -43,4 +43,12 @@ public class LYJ_PlayerMoveDetect : MonoBehaviour
             lastRot = transform.eulerAngles;
         }
     }
+
+    public bool IsPlayerMoving()
+    {
+        if (isMoving)
+            return true;
+        else
+            return false;
+    }
 }

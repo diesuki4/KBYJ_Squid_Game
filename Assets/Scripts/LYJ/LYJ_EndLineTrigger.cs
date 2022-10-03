@@ -7,7 +7,7 @@ using UnityEngine;
 public class LYJ_EndLineTrigger : MonoBehaviour
 {
     public GameObject player;
-    public LYJ_YeongHeeState yeongheeState;
+    public LYJ_MGGameManager mgGameManager;
     private bool isCounted;
     
     // Start is called before the first frame update
@@ -24,9 +24,9 @@ public class LYJ_EndLineTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == player && isCounted == false && yeongheeState.isTargeted == false)
+        if (other.gameObject == player && isCounted == false && mgGameManager.isTargeted == false)
         {
-            yeongheeState.CountUp();
+            // mgGameManager.CountUp();
             isCounted = true;
         }
     }

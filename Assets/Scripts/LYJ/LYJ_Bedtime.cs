@@ -82,8 +82,8 @@ public class LYJ_Bedtime : MonoBehaviour
         {
             timeValue += 150;
             // State.End로 변환
-            LYJ_YeongHeeState lyjState = LYJ_YeongHee.Instance.GetComponent<LYJ_YeongHeeState>();
-            lyjState.state = LYJ_YeongHeeState.State.End;
+            LYJ_MGGameManager mgGameManager = LYJ_YeongHee.Instance.GetComponent<LYJ_MGGameManager>();
+            mgGameManager.state = LYJ_MGGameManager.State.End;
         }
         if (timeValue < 0)
         {

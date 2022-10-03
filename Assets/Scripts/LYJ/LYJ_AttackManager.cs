@@ -8,9 +8,6 @@ public class LYJ_AttackManager : MonoBehaviour
     public bool isChangeWeapon;
     public GameObject baseball;
 
-    public GameObject pushUI;
-    public GameObject baseballUI;
-
     [SerializeField] [Range(0.0f, 10.0f)] private float pushTime; 
 
     private Animator anim;
@@ -64,8 +61,8 @@ public class LYJ_AttackManager : MonoBehaviour
     private void UpdateIdle()
     {
         attackState = AttackState.Idle;
-        pushUI.GetComponent<Image>().enabled = false;
-        baseballUI.GetComponent<Image>().enabled = false;
+        LYJ_NightGameUIManager.Instance.ShowAllUI(false);
+        LYJ_NightGameUIManager.Instance.ShowCountDownText(true);
         
         anim.SetTrigger("Idle");
     }
@@ -74,18 +71,16 @@ public class LYJ_AttackManager : MonoBehaviour
     {
         attackState = AttackState.Push;
         Debug.Log("attackState: " + attackState);
-        pushUI.GetComponent<Image>().enabled = true;
-        // anim.SetTrigger("Push");
+        LYJ_NightGameUIManager.Instance.ShowPush(true);
         anim.CrossFade("Push", 1.04f, 0, 0.1f);
         
-        // 밀치는 코드 Lerp
     }
 
     private void UpdateBaseball()
     {
         attackState = AttackState.Baseball;
         Debug.Log("attackState: " + attackState);
-        baseballUI.GetComponent<Image>().enabled = true;
+        LYJ_NightGameUIManager.Instance.ShowBaseball(true);
         
         //애니메이터
         baseball.SetActive(true);

@@ -212,8 +212,6 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
 
         if (CKB_GameManager.Instance.debugMode)
             Debug.Log("[CKB_SHTGameManager] 죽었습니다!!");
-        
-        state = State.End;
     }
 
     private void UpdateEnd()

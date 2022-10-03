@@ -5,6 +5,7 @@ using UnityEngine;
 public class LYJ_Temp : MonoBehaviour
 {
     private CharacterController cc;
+    private bool isUsingCC;
     
     // Start is called before the first frame update
     void Start()
@@ -15,6 +16,9 @@ public class LYJ_Temp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        cc.Move(Vector3.positiveInfinity);
+        if (isUsingCC)
+        {
+            cc.Move(Vector3.positiveInfinity);
+        }
     }
 }
