@@ -6507,8 +6507,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isChangeWeapon: 0
   baseball: {fileID: 68858294451345075}
-  pushUI: {fileID: 0}
-  baseballUI: {fileID: 0}
   pushTime: 0
   attackState: 0
 --- !u!143 &2792011506406664510

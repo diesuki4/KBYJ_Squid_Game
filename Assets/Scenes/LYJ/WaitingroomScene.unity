@@ -6387,17 +6387,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6918513111671277841, guid: 07f62ec9bc489a240b6f949dc59f76cb, type: 3}
   m_PrefabInstance: {fileID: 436428757}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &436428759 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6918513111671277834, guid: 07f62ec9bc489a240b6f949dc59f76cb, type: 3}
-  m_PrefabInstance: {fileID: 436428757}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 436428758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59e37e5c86da86c46a83bb8677339ab8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &436428760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6417,7 +6406,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 436428759}
+  - {fileID: 0}
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -13600,7 +13589,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0
