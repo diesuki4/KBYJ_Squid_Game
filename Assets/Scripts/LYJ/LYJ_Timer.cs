@@ -37,6 +37,5 @@ public class LYJ_Timer : MonoBehaviourPun
         }
 
         LYJ_MGGameUIManager.Instance.SetCountDownText(timeValue);
-        LYJ_NightGameUIManager.Instance.SetCountDownText(timeValue);
     }
 }

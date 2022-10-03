@@ -37,6 +37,7 @@ public class LYJ_MGGameManager : MonoBehaviourPun
 
     public bool isTargeted;
     private bool isOnce;
+    public GameObject cube;
 
     /* 상태머신 */
     public enum State
@@ -94,10 +95,9 @@ public class LYJ_MGGameManager : MonoBehaviourPun
                 break;
             case State.Die:
                 break;
-            /*
             case State.End:
                 UpdateEnd();
-                break;*/
+                break;
         }
     }
 
@@ -112,7 +112,11 @@ public class LYJ_MGGameManager : MonoBehaviourPun
         CKB_UI_TextDialogue.Instance.EnqueueConversationText("이번 게임은 무궁화꽃이 피었다입니다.");
         CKB_UI_TextDialogue.Instance.EnqueueConversationText("제한 시간 내에 선 안으로 들어가면 통과입니다.");
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
-        CKB_UI_TextDialogue.Instance.onComplete = () => { state = State.Initialize; };
+        CKB_UI_TextDialogue.Instance.onComplete = () =>
+        {
+            cube.SetActive(false);
+            state = State.Initialize;
+        };
     }
 
     private void UpdateInitialize()
