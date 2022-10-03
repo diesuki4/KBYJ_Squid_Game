@@ -49,6 +49,9 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     private GameObject player;
     private int playerEndCount;
 
+    bool isEnd;
+    bool isTimeOut;
+
     /* 상태머신 */
     public enum State
     {
@@ -144,6 +147,38 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             Timer();
         }
+
+        if (isTimeOut)
+        {
+            state = State.Target;
+
+            isTimeOut = true;
+        }
+
+        EndDetect();
+    }
+
+    void EndDetect()
+    {
+        if (PhotonNetwork.IsMasterClient && isEnd == false)
+        {
+            if (playerEndCount == PhotonNetwork.CurrentRoom.PlayerCount)
+            {
+                if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
+                {
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LeaveLobby();
+                    PhotonNetwork.Disconnect();
+                    Application.Quit();
+                }
+                else
+                {
+                    PhotonNetwork.LoadLevel("BridgeScene");
+                }
+
+                isEnd = true;
+            }
+        }
     }
 
     private void Timer()
@@ -174,10 +209,14 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         if (PhotonNetwork.IsMasterClient)
         {
             stream.SendNext(timeValue);
+            stream.SendNext(currentTime);
+            stream.SendNext(mugunghwaTime);
         }
         else
         {
             timeValue = (float)stream.ReceiveNext();
+            currentTime = (float)stream.ReceiveNext();
+            mugunghwaTime = (float)stream.ReceiveNext();
         }
     }
 
@@ -255,10 +294,8 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
             if (isTargeted)
             {
                 if (PhotonNetwork.IsMasterClient)
-                {
-                    photonView.RPC("SyncCurTime", RpcTarget.Others, currentTime);
                     MakingMasterClient();
-                }
+                    
                 state = State.Target;
             }
         }
@@ -274,12 +311,6 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
                 currentTime += Time.deltaTime;
             }
         }
-    }
-
-    [PunRPC]
-    private void SyncCurTime(float currentTime)
-    {
-        this.currentTime = currentTime;
     }
 
     [PunRPC]
@@ -305,7 +336,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         base.OnMasterClientSwitched(newMasterClient);
-        
+
         if (PhotonNetwork.IsMasterClient)
         {
             if (state != State.Bloom)
@@ -328,7 +359,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         yield return new WaitForSeconds(1);
         attackExplosion.AttackExplosion(pmDetect.lastPos, power, radius, upForce);
 
-        state = State.End;
+        DisconnectPhoton();
     }
         
     
@@ -350,5 +381,15 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     private void AddPlayerEndCount()
     {
         playerEndCount++;
+    }
+
+    void DisconnectPhoton()
+    {
+        PhotonNetwork.Destroy(player);
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveLobby();
+        PhotonNetwork.Disconnect();
+
+        state = State.AllEnd;
     }
 }

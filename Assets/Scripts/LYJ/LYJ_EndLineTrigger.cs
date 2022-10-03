@@ -26,7 +26,7 @@ public class LYJ_EndLineTrigger : MonoBehaviour
     {
         if (other.gameObject == player && isCounted == false && mgGameManager.isTargeted == false)
         {
-            // mgGameManager.CountUp();
+            mgGameManager.state = LYJ_MGGameManager.State.End;
             isCounted = true;
         }
     }
