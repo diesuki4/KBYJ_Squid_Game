@@ -6,7 +6,7 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
-public class LYJ_MGGameManager : MonoBehaviourPunCallbacks//, IPunObservable
+public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     #region gameobject
     public LYJ_MGTurnNeck turnNeck;
@@ -169,17 +169,17 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks//, IPunObservable
 
     }
 
-    // public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    // {
-    //     if (PhotonNetwork.IsMasterClient)
-    //     {
-    //         stream.SendNext(timeValue);
-    //     }
-    //     else
-    //     {
-    //         timeValue = (float)stream.ReceiveNext();
-    //     }
-    // }
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            stream.SendNext(timeValue);
+        }
+        else
+        {
+            timeValue = (float)stream.ReceiveNext();
+        }
+    }
 
     private void UpdateIdle()
     {
@@ -192,9 +192,11 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks//, IPunObservable
         CKB_UI_TextDialogue.Instance.EnqueueConversationText("이번 게임은 무궁화꽃이 피었다입니다.");
         CKB_UI_TextDialogue.Instance.EnqueueConversationText("제한 시간 내에 선 안으로 들어가면 통과입니다.");
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
-
-        photonView.RPC("RpcGameStart", RpcTarget.All);
-        state = State.CanMove;
+        CKB_UI_TextDialogue.Instance.onComplete = () =>
+        {
+            RpcGameStart();
+            photonView.RPC("RpcGameStart", RpcTarget.Others);
+        };
     }
 
     [PunRPC]
@@ -207,7 +209,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks//, IPunObservable
         LYJ_MGGameUIManager.Instance.ShowMugunghwa(true);
         if (PhotonNetwork.IsMasterClient)
         {
-            mugunghwaTime = 10;
+            mugunghwaTime = UnityEngine.Random.Range(4, 7);
         }
         state = State.CanMove;
     }
@@ -219,9 +221,9 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks//, IPunObservable
         LYJ_MGGameUIManager.Instance.ShowMugunghwa(true);
         if (PhotonNetwork.IsMasterClient)
         {
-            mugunghwaTime = 10;
-            photonView.RPC("RpcInitializeToCanMove", RpcTarget.All);
-            state = State.CanMove;
+            mugunghwaTime = UnityEngine.Random.Range(4, 7);
+            RpcInitializeToCanMove();
+            photonView.RPC("RpcInitializeToCanMove", RpcTarget.Others);
         }
     }
 
@@ -240,8 +242,8 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks//, IPunObservable
         {
             if (currentTime >= mugunghwaTime)
             {
-                photonView.RPC("RpcCanMoveToBloom", RpcTarget.All);
-                state = State.Bloom;
+                RpcCanMoveToBloom();
+                photonView.RPC("RpcCanMoveToBloom", RpcTarget.Others);
             }
             else
             {
@@ -288,8 +290,8 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks//, IPunObservable
         {
             if (currentTime >= bloomTime)
             {
-                photonView.RPC("BloomToInitialize", RpcTarget.All);
-                state = State.Initialize;
+                BloomToInitialize();
+                photonView.RPC("BloomToInitialize", RpcTarget.Others);
             }
             else
             {
