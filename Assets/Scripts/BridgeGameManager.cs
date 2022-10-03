@@ -16,13 +16,13 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
     public GameObject ground;
     public LYJ_BREndLineTrigger endLineTrigger;
 
-    private int endPlayerCount;
+    public int endPlayerCount;
     private bool isEnd;
 
     public TextMeshProUGUI countDownText;
     public float timeValue = 150;
     bool isTimeOut;
-    
+
     private void Awake()
     {
         //0~19
@@ -31,7 +31,6 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
         Transform randomTr = randomPosS[randomNum];*/
         Transform randomTr = randomPos.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
         player = PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
-    
         ground.GetComponent<LYJ_BridgeDie>().player = player;
         endLineTrigger.player = player;
 
@@ -59,9 +58,10 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
                     PhotonNetwork.Disconnect();
                     Application.Quit();
                 }
-                else
+                if (player.GetComponent<CKB_Player>().state != CKB_Player.State.Die && isEnd == false)
                 {
                     photonView.RPC("RpcLoadScene", RpcTarget.All);
+                    isEnd = true;
                 }
             }
         }
