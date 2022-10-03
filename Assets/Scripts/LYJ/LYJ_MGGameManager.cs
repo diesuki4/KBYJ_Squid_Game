@@ -51,6 +51,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
 
     bool isEnd;
     bool isTimeOut;
+    bool isTimeOutChecked;
 
     /* 상태머신 */
     public enum State
@@ -148,11 +149,10 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
             Timer();
         }
 
-        if (isTimeOut)
+        if (isTimeOut && !isTimeOutChecked)
         {
             state = State.Target;
-
-            isTimeOut = true;
+            isTimeOutChecked = true;
         }
 
         EndDetect();
@@ -184,21 +184,12 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     private void Timer()
     {
         if (PhotonNetwork.IsMasterClient)
-        {
             if (timeValue > 0)
-            {
                 timeValue -= Time.deltaTime;
-                
-            }
-            else
-            {
-                if (state == State.End)
-                {
-                    // 다음 씬으로 보내기 (Photon 적용)
-                    
-                }
-            }
-        }
+
+        if (timeValue <= 0)
+            isTimeOut = true;
+
         LYJ_MGGameUIManager.Instance.SetCountDownText(timeValue);
         LYJ_MGGameUIManager.Instance.ShowCountDownText(true);
 
