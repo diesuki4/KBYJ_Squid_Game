@@ -6,7 +6,7 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
-public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
+public class LYJ_MGGameManager : MonoBehaviourPunCallbacks//, IPunObservable
 {
     #region gameobject
     public LYJ_MGTurnNeck turnNeck;
@@ -169,17 +169,17 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            stream.SendNext(timeValue);
-        }
-        else
-        {
-            timeValue = (float)stream.ReceiveNext();
-        }
-    }
+    // public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    // {
+    //     if (PhotonNetwork.IsMasterClient)
+    //     {
+    //         stream.SendNext(timeValue);
+    //     }
+    //     else
+    //     {
+    //         timeValue = (float)stream.ReceiveNext();
+    //     }
+    // }
 
     private void UpdateIdle()
     {
@@ -193,10 +193,8 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         CKB_UI_TextDialogue.Instance.EnqueueConversationText("제한 시간 내에 선 안으로 들어가면 통과입니다.");
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
 
-        if (PhotonNetwork.IsMasterClient)
-            CKB_UI_TextDialogue.Instance.onComplete = () => { photonView.RPC("RpcGameStart", RpcTarget.All); };
-        else
-            CKB_UI_TextDialogue.Instance.onComplete = () => { };
+        photonView.RPC("RpcGameStart", RpcTarget.All);
+        state = State.CanMove;
     }
 
     [PunRPC]
@@ -209,7 +207,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         LYJ_MGGameUIManager.Instance.ShowMugunghwa(true);
         if (PhotonNetwork.IsMasterClient)
         {
-            mugunghwaTime = Random.Range(4, 7);
+            mugunghwaTime = 10;
         }
         state = State.CanMove;
     }
@@ -221,8 +219,9 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         LYJ_MGGameUIManager.Instance.ShowMugunghwa(true);
         if (PhotonNetwork.IsMasterClient)
         {
-            mugunghwaTime = Random.Range(4, 7);
+            mugunghwaTime = 10;
             photonView.RPC("RpcInitializeToCanMove", RpcTarget.All);
+            state = State.CanMove;
         }
     }
 
@@ -242,6 +241,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
             if (currentTime >= mugunghwaTime)
             {
                 photonView.RPC("RpcCanMoveToBloom", RpcTarget.All);
+                state = State.Bloom;
             }
             else
             {
@@ -289,6 +289,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
             if (currentTime >= bloomTime)
             {
                 photonView.RPC("BloomToInitialize", RpcTarget.All);
+                state = State.Initialize;
             }
             else
             {

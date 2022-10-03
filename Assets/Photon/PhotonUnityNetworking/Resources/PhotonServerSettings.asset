@@ -58,6 +58,12 @@ MonoBehaviour:
   - RpcSetPlayerCount
   - RpcSetPlayerPosition
   - RequestSetPos
+  - AddPlayerEndCount
+  - BloomToInitialize
+  - RpcCanMoveToBloom
+  - RpcGameStart
+  - RpcInitializeToCanMove
+  - SyncCurTime
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
