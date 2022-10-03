@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class WaitingroomManager : MonoBehaviourPun
+public class WaitingroomManager : MonoBehaviourPun, IPunObservable
 {
     public Transform trPos;
     GameObject go;
@@ -32,17 +32,20 @@ public class WaitingroomManager : MonoBehaviourPun
     
     private void Timer()
     {
-        if (timeValue > 0)
+        if (PhotonNetwork.IsMasterClient)
         {
-            timeValue -= Time.deltaTime;
-            
-        }
-        else
-        {
-            // 다음 씬 넘어가기
-            PhotonNetwork.LoadLevel("Mugunghwa");
+            if (timeValue > 0)
+            {
+                timeValue -= Time.deltaTime;
+                
+            }
+            else
+            {
+                // 다음 씬 넘어가기
+                PhotonNetwork.LoadLevel("Mugunghwa");
 
-            timeValue = 100;
+                timeValue = 100;
+            }
         }
         countDownText.text = Mathf.CeilToInt(timeValue).ToString();
     }
@@ -70,5 +73,17 @@ public class WaitingroomManager : MonoBehaviourPun
     void RpcSetPlayerCount(int playerCount)
     {
         this.playerCount = playerCount;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            stream.SendNext(timeValue);
+        }
+        else
+        {
+            timeValue = (float)stream.ReceiveNext();
+        }
     }
 }

@@ -81,7 +81,7 @@ public class LYJ_MGGameManager : MonoBehaviourPun
     [PunRPC]
     private void RequestSetPos(float unqValue)
     {
-        photonView.RPC("RpcSetPlayerPosition", RpcTarget.All, playerCount, uniqueValues);
+        photonView.RPC("RpcSetPlayerPosition", RpcTarget.All, playerCount, unqValue);
         photonView.RPC("SetPlayerCount", RpcTarget.Others, ++playerCount);  // 방장 나갔을 때 대비해서 playerCount 초기화
         
     }
