@@ -206,7 +206,14 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         cube.SetActive(false);
         isGameStarted = true;
-        state = State.Initialize;
+        LYJ_MGGameUIManager.Instance.ShowAllUITres(false);
+        LYJ_MGGameUIManager.Instance.ShowCountDownText(true);
+        LYJ_MGGameUIManager.Instance.ShowMugunghwa(true);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            mugunghwaTime = Random.Range(4, 7);
+        }
+        state = State.CanMove;
     }
 
     private void UpdateInitialize()
