@@ -194,24 +194,10 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
         CKB_UI_TextDialogue.Instance.onComplete = () =>
         {
-            RpcGameStart();
-            photonView.RPC("RpcGameStart", RpcTarget.Others);
+            cube.SetActive(false);
+            isGameStarted = true;
+            state = State.Initialize;
         };
-    }
-
-    [PunRPC]
-    private void RpcGameStart()
-    {
-        cube.SetActive(false);
-        isGameStarted = true;
-        LYJ_MGGameUIManager.Instance.ShowAllUITres(false);
-        LYJ_MGGameUIManager.Instance.ShowCountDownText(true);
-        LYJ_MGGameUIManager.Instance.ShowMugunghwa(true);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            mugunghwaTime = UnityEngine.Random.Range(4, 7);
-        }
-        state = State.CanMove;
     }
 
     private void UpdateInitialize()
@@ -219,23 +205,13 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         LYJ_MGGameUIManager.Instance.ShowAllUITres(false);
         LYJ_MGGameUIManager.Instance.ShowCountDownText(true);
         LYJ_MGGameUIManager.Instance.ShowMugunghwa(true);
+
         if (PhotonNetwork.IsMasterClient)
-        {
             mugunghwaTime = UnityEngine.Random.Range(4, 7);
-            RpcInitializeToCanMove();
-            photonView.RPC("RpcInitializeToCanMove", RpcTarget.Others);
-        }
+        
+        state = State.CanMove;
     }
 
-    [PunRPC]
-    private void RpcInitializeToCanMove()
-    {
-        if ((state & (State.Target | State.Attack | State.Die | State.End | State.AllEnd)) == 0)
-        {
-            state = State.CanMove;
-        }
-    }
-  
     private void UpdateCanMove()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -329,6 +305,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         base.OnMasterClientSwitched(newMasterClient);
+        
         if (PhotonNetwork.IsMasterClient)
         {
             if (state != State.Bloom)
