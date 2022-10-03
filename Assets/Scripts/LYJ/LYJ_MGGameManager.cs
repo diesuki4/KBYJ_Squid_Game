@@ -192,13 +192,11 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         CKB_UI_TextDialogue.Instance.EnqueueConversationText("이번 게임은 무궁화꽃이 피었다입니다.");
         CKB_UI_TextDialogue.Instance.EnqueueConversationText("제한 시간 내에 선 안으로 들어가면 통과입니다.");
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
-        CKB_UI_TextDialogue.Instance.onComplete = () =>
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                photonView.RPC("RpcGameStart", RpcTarget.All);
-            }
-        };
+
+        if (PhotonNetwork.IsMasterClient)
+            CKB_UI_TextDialogue.Instance.onComplete = () => { photonView.RPC("RpcGameStart", RpcTarget.All); };
+        else
+            CKB_UI_TextDialogue.Instance.onComplete = () => { };
     }
 
     [PunRPC]
