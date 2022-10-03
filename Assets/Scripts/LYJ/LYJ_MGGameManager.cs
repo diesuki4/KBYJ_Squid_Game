@@ -73,7 +73,7 @@ public class LYJ_MGGameManager : MonoBehaviourPun
         LYJ_MGGameUIManager.Instance.crosshair = player.transform.Find("Crosshair").gameObject;
 
         uniqueValues = Random.Range(float.MinValue, float.MaxValue);
-        
+        photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
         
         state = State.Idle;
     }
