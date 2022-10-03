@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon.StructWrapping;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
-public class LYJ_MGGameManager : MonoBehaviourPun
+public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     #region gameobject
     public LYJ_MGTurnNeck turnNeck;
@@ -46,6 +47,7 @@ public class LYJ_MGGameManager : MonoBehaviourPun
     private float uniqueValues;
     private int playerCount;
     private GameObject player;
+    private int playerEndCount;
 
     /* 상태머신 */
     public enum State
@@ -59,6 +61,7 @@ public class LYJ_MGGameManager : MonoBehaviourPun
         Attack = 64,
         Die = 128,
         End = 256,
+        AllEnd = 512,
     }
 
     public State state;
@@ -103,6 +106,7 @@ public class LYJ_MGGameManager : MonoBehaviourPun
     }
 
     // Update is called once per frame
+
     void Update()
     {
         switch (state)
@@ -132,6 +136,8 @@ public class LYJ_MGGameManager : MonoBehaviourPun
             case State.End:
                 UpdateEnd();
                 break;
+            case State.AllEnd:
+                break;
         }
 
         if (isGameStarted)
@@ -142,23 +148,37 @@ public class LYJ_MGGameManager : MonoBehaviourPun
 
     private void Timer()
     {
-        if (timeValue > 0)
+        if (PhotonNetwork.IsMasterClient)
         {
-            timeValue -= Time.deltaTime;
-            
-        }
-        else
-        {
-            if (state == State.End)
+            if (timeValue > 0)
             {
-                // 다음 씬으로 보내기 (Photon 적용)
+                timeValue -= Time.deltaTime;
                 
             }
+            else
+            {
+                if (state == State.End)
+                {
+                    // 다음 씬으로 보내기 (Photon 적용)
+                    
+                }
+            }
         }
-        
         LYJ_MGGameUIManager.Instance.SetCountDownText(timeValue);
         LYJ_MGGameUIManager.Instance.ShowCountDownText(true);
 
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            stream.SendNext(timeValue);
+        }
+        else
+        {
+            timeValue = (float)stream.ReceiveNext();
+        }
     }
 
     private void UpdateIdle()
@@ -174,10 +194,22 @@ public class LYJ_MGGameManager : MonoBehaviourPun
         CKB_UI_TextDialogue.Instance.DisappearTextDialogue();
         CKB_UI_TextDialogue.Instance.onComplete = () =>
         {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                photonView.RPC("RpcGameStart", RpcTarget.All);
+            }
+        };
+    }
+
+    [PunRPC]
+    private void RpcGameStart()
+    {
+        if (state == State.Conversation)
+        {
             cube.SetActive(false);
             isGameStarted = true;
             state = State.Initialize;
-        };
+        }
     }
 
     private void UpdateInitialize()
@@ -185,52 +217,118 @@ public class LYJ_MGGameManager : MonoBehaviourPun
         LYJ_MGGameUIManager.Instance.ShowAllUITres(false);
         LYJ_MGGameUIManager.Instance.ShowCountDownText(true);
         LYJ_MGGameUIManager.Instance.ShowMugunghwa(true);
-        mugunghwaTime = Random.Range(4, 7);
-        
-        state = State.CanMove;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            mugunghwaTime = Random.Range(4, 7);
+            photonView.RPC("RpcInitializeToCanMove", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    private void RpcInitializeToCanMove()
+    {
+        if (state == State.Initialize)
+        {
+            state = State.CanMove;
+        }
     }
   
     private void UpdateCanMove()
     {
-        if (currentTime >= mugunghwaTime)
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (currentTime >= mugunghwaTime)
+            {
+                photonView.RPC("RpcCanMoveToBloom", RpcTarget.All);
+            }
+            else
+            {
+                currentTime += Time.deltaTime;
+            }
+        }
+    }
+
+    [PunRPC]
+    private void RpcCanMoveToBloom()
+    {
+        if (state == State.CanMove)
         {
             LYJ_MGGameUIManager.Instance.ShowAllUITres(false);
             LYJ_MGGameUIManager.Instance.ShowBloom(true);
-            
+                    
             // 2 영희가 목을 한번 돌린다
             turnNeck.TurnBackNeck();
-            
+                    
             currentTime = 0;
-            
+                    
             state = State.Bloom;
-        }
-        else
-        {
-            currentTime += Time.deltaTime;
         }
     }
 
     private void UpdateBloom()
     {
-        if (currentTime >= bloomTime)
+        if (triggerGround.isInsideLine)
+        {
+            // 3 플레이어 움직임 감지
+            isTargeted = pmDetect.IsPlayerMoving();
+            
+            if (isTargeted)
+            {
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    photonView.RPC("SyncCurTime", RpcTarget.Others, currentTime);
+                    MakingMasterClient();
+                }
+                state = State.Target;
+            }
+        }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (currentTime >= bloomTime)
+            {
+                photonView.RPC("BloomToInitialize", RpcTarget.All);
+            }
+            else
+            {
+                currentTime += Time.deltaTime;
+            }
+        }
+    }
+
+    [PunRPC]
+    private void SyncCurTime(float currentTime)
+    {
+        this.currentTime = currentTime;
+    }
+
+    [PunRPC]
+    private void BloomToInitialize()
+    {
+        if (state == State.Bloom)
         {
             currentTime = 0;
             turnNeck.TurnNeck();
             state = State.Initialize;
         }
-        else
-        {
-            currentTime += Time.deltaTime;
+    }
 
-            if (triggerGround.isInsideLine)
+    private void MakingMasterClient()
+    {
+        if (PhotonNetwork.PlayerListOthers.Length > 0)
+        {
+            int idx = UnityEngine.Random.Range(0, PhotonNetwork.PlayerListOthers.Length);
+            PhotonNetwork.SetMasterClient(PhotonNetwork.PlayerListOthers[idx]);
+        }
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        base.OnMasterClientSwitched(newMasterClient);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (state != State.Bloom)
             {
-                // 3 플레이어 움직임 감지
-                isTargeted = pmDetect.IsPlayerMoving();
-                
-                if (isTargeted)
-                {
-                    state = State.Target;
-                }
+                MakingMasterClient();
             }
         }
     }
@@ -261,6 +359,14 @@ public class LYJ_MGGameManager : MonoBehaviourPun
 
     private void UpdateEnd()
     {
-        Debug.Log("state = State.End");
+        photonView.RPC("AddPlayerEndCount", RpcTarget.All);
+
+        state = State.AllEnd;
+    }
+
+    [PunRPC]
+    private void AddPlayerEndCount()
+    {
+        playerEndCount++;
     }
 }
