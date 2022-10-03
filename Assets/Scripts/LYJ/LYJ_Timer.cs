@@ -21,6 +21,7 @@ public class LYJ_Timer : MonoBehaviourPun
         if (timeValue > 0)
         {
             timeValue -= Time.deltaTime;
+            
         }
         else
         {
@@ -37,5 +38,6 @@ public class LYJ_Timer : MonoBehaviourPun
         }
 
         LYJ_MGGameUIManager.Instance.SetCountDownText(timeValue);
+        
     }
 }

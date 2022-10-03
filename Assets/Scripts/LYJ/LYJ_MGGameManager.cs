@@ -38,6 +38,9 @@ public class LYJ_MGGameManager : MonoBehaviourPun
     public bool isTargeted;
     private bool isOnce;
     public GameObject cube;
+    
+    public float timeValue = 150;
+    private bool isGameStarted;
 
     /* 상태머신 */
     public enum State
@@ -99,6 +102,32 @@ public class LYJ_MGGameManager : MonoBehaviourPun
                 UpdateEnd();
                 break;
         }
+
+        if (isGameStarted)
+        {
+            Timer();
+        }
+    }
+
+    private void Timer()
+    {
+        if (timeValue > 0)
+        {
+            timeValue -= Time.deltaTime;
+            
+        }
+        else
+        {
+            if (state == State.End)
+            {
+                // 다음 씬으로 보내기 (Photon 적용)
+                
+            }
+        }
+        
+        LYJ_MGGameUIManager.Instance.SetCountDownText(timeValue);
+        LYJ_MGGameUIManager.Instance.ShowCountDownText(true);
+
     }
 
     private void UpdateIdle()
@@ -115,6 +144,7 @@ public class LYJ_MGGameManager : MonoBehaviourPun
         CKB_UI_TextDialogue.Instance.onComplete = () =>
         {
             cube.SetActive(false);
+            isGameStarted = true;
             state = State.Initialize;
         };
     }

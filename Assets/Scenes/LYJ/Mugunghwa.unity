@@ -38591,7 +38591,6 @@ GameObject:
   - component: {fileID: 973401458}
   - component: {fileID: 973401457}
   - component: {fileID: 6918513111234798720}
-  - component: {fileID: 6918513111234798721}
   m_Layer: 5
   m_Name: CanvasTimer
   m_TagString: Untagged
@@ -40307,6 +40306,7 @@ MonoBehaviour:
   mugunghwaTime: 0
   isTargeted: 0
   cube: {fileID: 1836494938}
+  timeValue: 150
   state: 0
 --- !u!1001 &1022016371
 PrefabInstance:
@@ -86681,19 +86681,6 @@ MonoBehaviour:
   sceneViewId: 3
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &6918513111234798721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 973401455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59e37e5c86da86c46a83bb8677339ab8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeValue: 150
 --- !u!23 &7428720936923462481
 MeshRenderer:
   m_ObjectHideFlags: 0

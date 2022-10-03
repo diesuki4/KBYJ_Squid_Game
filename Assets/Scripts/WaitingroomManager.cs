@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WaitingroomManager : MonoBehaviourPun
 {
@@ -9,6 +12,9 @@ public class WaitingroomManager : MonoBehaviourPun
     GameObject go;
     int playerCount;
     float uniqueValue;
+
+    public float timeValue = 20;
+    public TextMeshProUGUI countDownText;
     
     // Start is called before the first frame update
     void Start()
@@ -18,6 +24,29 @@ public class WaitingroomManager : MonoBehaviourPun
         uniqueValue = Random.Range(float.MinValue, float.MaxValue); // 1 player -> master
         photonView.RPC("AddPlayerCount", RpcTarget.MasterClient, uniqueValue);
     }
+
+    private void Update()
+    {
+        Timer();
+    }
+    
+    private void Timer()
+    {
+        if (timeValue > 0)
+        {
+            timeValue -= Time.deltaTime;
+            
+        }
+        else
+        {
+            // 다음 씬 넘어가기
+            PhotonNetwork.LoadLevel("Mugunghwa");
+
+            timeValue = 100;
+        }
+        countDownText.text = Mathf.CeilToInt(timeValue).ToString();
+    }
+
 
     [PunRPC]
     void AddPlayerCount(float unqValue)
