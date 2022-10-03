@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using Photon.Pun;
 using Photon.Realtime;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = System.Random;
@@ -16,6 +18,10 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
 
     private int endPlayerCount;
     private bool isEnd;
+
+    public TextMeshProUGUI countDownText;
+    public float timeValue = 150;
+    bool isTimeOut;
     
     private void Awake()
     {
@@ -24,7 +30,6 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
         int randomNum = UnityEngine.Random.Range(0, maxPlayer);
         Transform randomTr = randomPosS[randomNum];*/
         Transform randomTr = randomPos.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
-
         player = PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
     
         ground.GetComponent<LYJ_BridgeDie>().player = player;
@@ -59,8 +64,28 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
                     photonView.RPC("RpcLoadScene", RpcTarget.All);
                 }
             }
-            
         }
+        Timer();
+    }
+
+    private void Timer()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (timeValue > 0)
+                timeValue -= Time.deltaTime;
+
+            if (timeValue <= 0)
+                isTimeOut = true;
+            
+            ShowCountDown(timeValue, true);
+        }
+    }
+
+    private void ShowCountDown(float countdown, bool show)
+    {
+        countDownText.text = Mathf.CeilToInt(countdown).ToString();
+        countDownText.gameObject.SetActive(show);
     }
 
     public void CountUp()

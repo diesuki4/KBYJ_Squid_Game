@@ -24,6 +24,7 @@ public class LYJ_EndLineTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        print(other.gameObject == player);
         if (other.gameObject == player && isCounted == false && mgGameManager.isTargeted == false)
         {
             mgGameManager.state = LYJ_MGGameManager.State.End;

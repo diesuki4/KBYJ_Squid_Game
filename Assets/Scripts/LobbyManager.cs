@@ -14,8 +14,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        roomNameUI.text = "방이름: " + PhotonNetwork.CurrentRoom.Name;
-        playerNum.text = "참가자수: " + PhotonNetwork.CurrentRoom.PlayerCount;
+        roomNameUI.text = "Room name: " + PhotonNetwork.CurrentRoom.Name;
+        playerNum.text = "number: " + PhotonNetwork.CurrentRoom.PlayerCount;
 
         if (PhotonNetwork.IsMasterClient)
             startButton.interactable = true;
