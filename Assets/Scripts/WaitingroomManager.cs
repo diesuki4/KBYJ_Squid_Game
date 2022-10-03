@@ -51,6 +51,7 @@ public class WaitingroomManager : MonoBehaviourPun
     [PunRPC]
     void AddPlayerCount(float unqValue)
     {
+        // playerCount = trPos의 자식
         photonView.RPC("SetPlayerPosition", RpcTarget.All, playerCount, unqValue);    // 2 master -> all
         photonView.RPC("RpcSetPlayerCount", RpcTarget.Others, ++playerCount);
     }

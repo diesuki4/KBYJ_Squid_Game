@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon.StructWrapping;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
@@ -42,6 +43,10 @@ public class LYJ_MGGameManager : MonoBehaviourPun
     public float timeValue = 150;
     private bool isGameStarted;
 
+    private float uniqueValues;
+    private int playerCount;
+    private GameObject player;
+
     /* 상태머신 */
     public enum State
     {
@@ -61,14 +66,40 @@ public class LYJ_MGGameManager : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
-        Transform trRandom = randomPos.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
-        GameObject player = PhotonNetwork.Instantiate("PlayerMG", trRandom.position, trRandom.rotation);
+        player = PhotonNetwork.Instantiate("PlayerMG", Vector3.zero, Quaternion.identity);
         endLineTrigger.player = player;
         pmDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
         attackExplosion = player.GetComponent<LYJ_AttackExplosion>();
         LYJ_MGGameUIManager.Instance.crosshair = player.transform.Find("Crosshair").gameObject;
+
+        uniqueValues = Random.Range(float.MinValue, float.MaxValue);
+        
         
         state = State.Idle;
+    }
+
+    [PunRPC]
+    private void RequestSetPos(float unqValue)
+    {
+        photonView.RPC("RpcSetPlayerPosition", RpcTarget.All, playerCount, uniqueValues);
+        photonView.RPC("SetPlayerCount", RpcTarget.Others, ++playerCount);  // 방장 나갔을 때 대비해서 playerCount 초기화
+        
+    }
+
+    [PunRPC]
+    private void RpcSetPlayerPosition(int posIdx, float unqValue)
+    {
+        if (Mathf.Approximately(this.uniqueValues, unqValue))
+        {
+            player.transform.position = randomPos.GetChild(posIdx).position;
+            player.transform.rotation = randomPos.GetChild(posIdx).rotation;
+        }
+    }
+
+    [PunRPC]
+    private void SetPlayerCount(int playerCount)
+    {
+        this.playerCount = playerCount;
     }
 
     // Update is called once per frame
