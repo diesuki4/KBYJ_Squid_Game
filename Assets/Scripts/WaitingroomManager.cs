@@ -22,13 +22,23 @@ public class WaitingroomManager : MonoBehaviourPun
     [PunRPC]
     void AddPlayerCount(float unqValue)
     {
-        photonView.RPC("SetPlayerPosition", RpcTarget.All, playerCount++, unqValue);    // 2 master -> all
+        photonView.RPC("SetPlayerPosition", RpcTarget.All, playerCount, unqValue);    // 2 master -> all
+        photonView.RPC("RpcSetPlayerCount", RpcTarget.Others, ++playerCount);
     }
 
     [PunRPC]
     void SetPlayerPosition(int count, float unqValue)
     {
         if (Mathf.Approximately(uniqueValue, unqValue)) // 3 unqValue 내가 방장한테 보낸 거 확인하는 용도
+        {
             go.transform.position = trPos.GetChild(count).position;
+            go.transform.rotation = trPos.GetChild(count).rotation;
+        }
+    }
+
+    [PunRPC]
+    void RpcSetPlayerCount(int playerCount)
+    {
+        this.playerCount = playerCount;
     }
 }
