@@ -38,6 +38,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
-        playerNum.text = "참가자수: " + PhotonNetwork.CurrentRoom.PlayerCount;
+        playerNum.text = "number: " + PhotonNetwork.CurrentRoom.PlayerCount;
     }
 }
