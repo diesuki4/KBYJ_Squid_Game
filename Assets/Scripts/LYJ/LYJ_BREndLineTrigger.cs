@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LYJ_BREndLineTrigger : MonoBehaviour
 {
-    public BridgeGameManager brGameManager;
+    public LYJ_BridgeGameManager brGameManager;
     public GameObject player;
 
     private bool isCounted;

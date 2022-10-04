@@ -18,7 +18,7 @@ public class LYJ_BridgeDie : MonoBehaviour
     #endregion
 
     public GameObject player;
-    public BridgeGameManager bridgeGM;
+    public LYJ_BridgeGameManager bridgeGM;
 
     // Start is called before the first frame update
     void Start()

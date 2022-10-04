@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = System.Random;
 
-public class BridgeGameManager : MonoBehaviourPunCallbacks
+public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
 {
     private GameObject player;
     public Transform randomPos;
@@ -40,7 +40,7 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        SetHiddenBridge(false);
+        hiddenBridge.SetActive(false);
     }
     
     // Update is called once per frame
