@@ -156,7 +156,7 @@ public class CKB_MarbleGameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient && isEnd == false)
         {
-            if (playerEndCount == playerCount)
+            if (playerEndCount == PhotonNetwork.CurrentRoom.PlayerCount)
             {
                 if (player.GetComponent<CKB_Player>().state == CKB_Player.State.Die)
                 {
@@ -167,7 +167,7 @@ public class CKB_MarbleGameManager : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    PhotonNetwork.LoadLevel("CKB_ToWGameScene");
+                    PhotonNetwork.LoadLevel("EndScene");
                 }
 
                 isEnd = true;
@@ -284,28 +284,30 @@ public class CKB_MarbleGameManager : MonoBehaviourPunCallbacks
     {
         CKB_MarbleGameUIManager.Instance.ShowAllUI(false);
         player.Die(CKB_Player.DieType.FlyAway);
-        state = State.End;
-
-        if (CKB_GameManager.Instance.debugMode)
-            Debug.Log("[CKB_MarbleGameManager] 죽었습니다!!");
+        
+        DisconnectPhoton();
     }
 
     void UpdateEnd()
     {
-        // PlayerEndCount 증가
-        AddEndCount();
+        photonView.RPC("AddPlayerEndCount", RpcTarget.All);
         
         state = State.AllEnd;
     }
 
-    public void AddEndCount()
-    {
-        photonView.RPC("RpcAddEndCount", RpcTarget.All);
-    }
-
     [PunRPC]
-    void RpcAddEndCount()
+    void AddPlayerEndCount()
     {
         playerEndCount++;
+    }
+
+    void DisconnectPhoton()
+    {
+        PhotonNetwork.Destroy(goPlayer);
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveLobby();
+        PhotonNetwork.Disconnect();
+
+        state = State.AllEnd;
     }
 }

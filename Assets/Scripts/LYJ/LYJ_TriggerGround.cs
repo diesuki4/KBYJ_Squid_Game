@@ -6,6 +6,7 @@ using UnityEngine;
 public class LYJ_TriggerGround : MonoBehaviour
 {
     public static LYJ_TriggerGround Instance;
+    public GameObject player;
 
     public bool isInsideLine;
     
@@ -19,7 +20,7 @@ public class LYJ_TriggerGround : MonoBehaviour
     
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name.Contains("Player"))
+        if (other.gameObject == player)
         {
             isInsideLine = true;
         }
@@ -27,7 +28,7 @@ public class LYJ_TriggerGround : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.name.Contains("Player"))
+        if (other.gameObject == player)
         {
             isInsideLine = false;
         }
