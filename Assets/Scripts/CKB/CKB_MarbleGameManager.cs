@@ -167,7 +167,7 @@ public class CKB_MarbleGameManager : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    PhotonNetwork.LoadLevel("EndScene");
+                    PhotonNetwork.LoadLevel("LastResult");
                 }
 
                 isEnd = true;

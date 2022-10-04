@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CKB/CKB_MarbleGameScene.unity
     guid: 6ee927588f7d9d74c9357ff3a1b6fabf
+  - enabled: 1
+    path: Assets/Scenes/LastResult.unity
+    guid: 0e379958ff6ae9a4ead2c91d6ccf8c91
   m_configObjects: {}
