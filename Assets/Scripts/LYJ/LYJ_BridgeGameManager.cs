@@ -26,13 +26,9 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
     public float timeValue = 150;
     private bool isTimeOut;
 
-    private void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
-        //0~19
-        /*Transform[] randomPosS = randomPos.GetComponentsInChildren<Transform>();
-        int randomNum = UnityEngine.Random.Range(0, maxPlayer);
-        Transform randomTr = randomPosS[randomNum];*/
-
         player = PhotonNetwork.Instantiate("Player", Vector3.up * 100, Quaternion.identity);
 
         uniqueValues = UnityEngine.Random.Range(float.MinValue, float.MaxValue);
@@ -44,11 +40,7 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
 
         ground.GetComponent<LYJ_BridgeDie>().player = player;
         endLineTrigger.player = player;
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         hiddenBridge.SetActive(false);
     }
     
