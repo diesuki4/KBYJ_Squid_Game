@@ -36,8 +36,6 @@ public class ChatManager : MonoBehaviourPun
         /* chatting 창 세부 조정 */
         // 1 채팅을 쓸 때도 플레이어 움직임 막기
         // 1-1 커서를 안보이게 
-        Cursor.visible = false;
-
         nickColor = new Color(
                     Random.Range(0.0f, 1.0f),
                     Random.Range(0.0f, 1.0f),
@@ -48,22 +46,7 @@ public class ChatManager : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-        // 1-2 esc 키를 누르면 커서를 활성화
-        if (Input.GetKeyDown(KeyCode.Escape))
-            Cursor.visible = true;
-        
-        // 1-2 어딘가 클릭하면 커서를 활성화
-        if (Input.GetMouseButton(0))
-        {
-            // 만약에 마우스 커서가 UI 에 없다면
-            if (EventSystem.current.IsPointerOverGameObject() == false)
-            {
-                Cursor.visible = false;
-            }
-            
-            /*// 모바일의 경우 //GetTouch(0) = 처음 터치 => 애초에 2번째 터치 안받음
-            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId) == false)*/
-        }
+        inputChat.ActivateInputField();
     }
 
 
