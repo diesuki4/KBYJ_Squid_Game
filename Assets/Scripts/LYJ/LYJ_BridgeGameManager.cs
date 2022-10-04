@@ -47,7 +47,11 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RequestSetPos(float unqValue)
     {
-        photonView.RPC("RpcSetPlayerPosition", RpcTarget.All, playerCount, unqValue);
+        if (PhotonNetwork.IsMasterClient)
+            RpcSetPlayerPosition(playerCount, unqValue);
+        else
+            photonView.RPC("RpcSetPlayerPosition", RpcTarget.Others, playerCount, unqValue);
+            
         photonView.RPC("SetPlayerCount", RpcTarget.Others, ++playerCount);  // 방장 나갔을 때 대비해서 playerCount 초기화
         
     }
