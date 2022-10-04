@@ -188,10 +188,10 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
                     if (CKB_SHTGameUIManager.Instance.IsInnerArea(hitImage))
                         CKB_SHTGameUIManager.Instance.ShowDrawArea(hitImage, true);
                     else
-                        StartCoroutine(SetStateAfter(State.Result, 0.5f));
+                        state = State.Result;
 
                 if (CKB_SHTGameUIManager.Instance.IsAllDrawAreaVisible())
-                    state = State.Result;
+                    StartCoroutine(SetStateAfter(State.Result, 0.5f));
             }
         }
         else
