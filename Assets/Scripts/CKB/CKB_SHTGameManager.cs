@@ -168,9 +168,6 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
 
     void UpdateInGame()
     {
-        if (isGameFinished)
-            return;
-
         currentTime += Time.deltaTime;
 
         if (currentTime < inGameTime)
@@ -191,7 +188,8 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
                         state = State.Result;
 
                 if (CKB_SHTGameUIManager.Instance.IsAllDrawAreaVisible())
-                    StartCoroutine(SetStateAfter(State.Result, 0.5f));
+                    if (!isGameFinished)
+                        StartCoroutine(SetStateAfter(State.Result, 0.5f));
             }
         }
         else
