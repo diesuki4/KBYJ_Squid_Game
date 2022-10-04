@@ -15,13 +15,14 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
     public Transform randomPos;
     public GameObject ground;
     public LYJ_BREndLineTrigger endLineTrigger;
+    public GameObject hiddenBridge;
 
     public int endPlayerCount;
     private bool isEnd;
 
     public TextMeshProUGUI countDownText;
     public float timeValue = 150;
-    bool isTimeOut;
+    private bool isTimeOut;
 
     private void Awake()
     {
@@ -39,12 +40,14 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-
+        SetHiddenBridge(false);
     }
     
     // Update is called once per frame
     void Update()
     {
+        SetHiddenBridge(true);
+        
         print("endPlayerCount: " + endPlayerCount);
         if (PhotonNetwork.IsMasterClient)
         {
@@ -121,6 +124,14 @@ public class BridgeGameManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LoadLevel("CKB_SHTGameScene");
             isEnd = true;
+        }
+    }
+
+    private void SetHiddenBridge(bool show)
+    {
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            hiddenBridge.SetActive(show);
         }
     }
 }
