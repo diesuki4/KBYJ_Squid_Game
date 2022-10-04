@@ -81,7 +81,11 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
         LYJ_MGGameUIManager.Instance.crosshair = player.transform.Find("Crosshair").gameObject;
 
         uniqueValues = Random.Range(float.MinValue, float.MaxValue);
-        photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
+        
+        if (PhotonNetwork.IsMasterClient)
+            RequestSetPos(uniqueValues);
+        else
+            photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
         
         state = State.Idle;
     }

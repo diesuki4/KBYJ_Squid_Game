@@ -36,7 +36,11 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
         player = PhotonNetwork.Instantiate("Player", Vector3.up * 100, Quaternion.identity);
 
         uniqueValues = UnityEngine.Random.Range(float.MinValue, float.MaxValue);
-        photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
+        
+        if (PhotonNetwork.IsMasterClient)
+            RequestSetPos(uniqueValues);
+        else
+            photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
 
         ground.GetComponent<LYJ_BridgeDie>().player = player;
         endLineTrigger.player = player;

@@ -22,7 +22,11 @@ public class WaitingroomManager : MonoBehaviourPun, IPunObservable
         go = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
 
         uniqueValue = Random.Range(float.MinValue, float.MaxValue); // 1 player -> master
-        photonView.RPC("AddPlayerCount", RpcTarget.MasterClient, uniqueValue);
+        
+        if (PhotonNetwork.IsMasterClient)
+            AddPlayerCount(uniqueValue);
+        else
+            photonView.RPC("AddPlayerCount", RpcTarget.MasterClient, uniqueValue);
     }
 
     private void Update()

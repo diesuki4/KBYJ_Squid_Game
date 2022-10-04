@@ -57,7 +57,11 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
         agentAnim = PhotonNetwork.Instantiate("Agent2", Vector3.zero, Quaternion.identity).GetComponent<Animator>();
 
         uniqueValue = Random.Range(float.MinValue, float.MaxValue);
-        photonView.RPC("RpcRequestSetPlayerPosition", RpcTarget.MasterClient, uniqueValue);
+        
+        if (PhotonNetwork.IsMasterClient)
+            RpcRequestSetPlayerPosition(uniqueValue);
+        else
+            photonView.RPC("RpcRequestSetPlayerPosition", RpcTarget.MasterClient, uniqueValue);
 
         state = State.Idle;
     }
