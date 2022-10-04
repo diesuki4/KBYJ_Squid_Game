@@ -150,12 +150,6 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
             Timer();
         }
 
-        if (isTimeOut && !isTimeOutChecked)
-        {
-            state = State.Target;
-            isTimeOutChecked = true;
-        }
-
         EndDetect();
     }
 
