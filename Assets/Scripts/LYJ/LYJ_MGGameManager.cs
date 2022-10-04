@@ -75,6 +75,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         player = PhotonNetwork.Instantiate("PlayerMG", Vector3.zero, Quaternion.identity);
         endLineTrigger.player = player;
+        triggerGround.player = player;
         pmDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
         attackExplosion = player.GetComponent<LYJ_AttackExplosion>();
         LYJ_MGGameUIManager.Instance.crosshair = player.transform.Find("Crosshair").gameObject;
@@ -352,7 +353,6 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
 
         DisconnectPhoton();
     }
-        
     
     private void UpdateAttack()
     {
