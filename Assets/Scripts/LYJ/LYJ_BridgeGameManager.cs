@@ -33,7 +33,7 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
         int randomNum = UnityEngine.Random.Range(0, maxPlayer);
         Transform randomTr = randomPosS[randomNum];*/
 
-        player = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        player = PhotonNetwork.Instantiate("Player", Vector3.up * 100, Quaternion.identity);
 
         uniqueValues = UnityEngine.Random.Range(float.MinValue, float.MaxValue);
         photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
