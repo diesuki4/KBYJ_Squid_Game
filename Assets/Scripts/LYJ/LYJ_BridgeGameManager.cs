@@ -11,14 +11,16 @@ using Random = System.Random;
 
 public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
 {
-    private GameObject player;
     public Transform randomPos;
     public GameObject ground;
     public LYJ_BREndLineTrigger endLineTrigger;
     public GameObject hiddenBridge;
 
-    public int endPlayerCount;
-    private bool isEnd;
+    private float uniqueValues;
+    private int playerCount;
+    private GameObject player;
+    private int endPlayerCount;
+    bool isEnd;
 
     public TextMeshProUGUI countDownText;
     public float timeValue = 150;
@@ -30,11 +32,14 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
         /*Transform[] randomPosS = randomPos.GetComponentsInChildren<Transform>();
         int randomNum = UnityEngine.Random.Range(0, maxPlayer);
         Transform randomTr = randomPosS[randomNum];*/
-        Transform randomTr = randomPos.GetChild(PhotonNetwork.CurrentRoom.PlayerCount - 1);
-        player = PhotonNetwork.Instantiate("Player", randomTr.position, randomTr.rotation);
+
+        player = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+
+        uniqueValues = UnityEngine.Random.Range(float.MinValue, float.MaxValue);
+        photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
+
         ground.GetComponent<LYJ_BridgeDie>().player = player;
         endLineTrigger.player = player;
-
     }
 
     // Start is called before the first frame update
@@ -43,6 +48,30 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
         hiddenBridge.SetActive(false);
     }
     
+    [PunRPC]
+    private void RequestSetPos(float unqValue)
+    {
+        photonView.RPC("RpcSetPlayerPosition", RpcTarget.All, playerCount, unqValue);
+        photonView.RPC("SetPlayerCount", RpcTarget.Others, ++playerCount);  // 방장 나갔을 때 대비해서 playerCount 초기화
+        
+    }
+
+    [PunRPC]
+    private void RpcSetPlayerPosition(int posIdx, float unqValue)
+    {
+        if (Mathf.Approximately(this.uniqueValues, unqValue))
+        {
+            player.transform.position = randomPos.GetChild(posIdx).position;
+            player.transform.rotation = randomPos.GetChild(posIdx).rotation;
+        }
+    }
+
+    [PunRPC]
+    private void SetPlayerCount(int playerCount)
+    {
+        this.playerCount = playerCount;
+    }
+
     // Update is called once per frame
     void Update()
     {
