@@ -38,7 +38,7 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
         else
             photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
 
-        ground.GetComponent<LYJ_BridgeDie>().player = player;
+        ground.GetComponent<LYJ_BridgeDie>().setPlayer(player);
         endLineTrigger.player = player;
 
         hiddenBridge.SetActive(false);
@@ -55,7 +55,7 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RpcSetPlayerPosition(int posIdx, float unqValue)
     {
-        if (Mathf.Approximately(this.uniqueValues, unqValue))
+        if (Mathf.Approximately(uniqueValues, unqValue))
         {
             player.transform.position = randomPos.GetChild(posIdx).position;
             player.transform.rotation = randomPos.GetChild(posIdx).rotation;

@@ -23,8 +23,13 @@ public class LYJ_BridgeDie : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _playerMoveDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
         print("attackExplosion: " + attackExplosion + " _playerMoveDetect: " + _playerMoveDetect);
+    }
+
+    public void setPlayer(GameObject gopPlayer)
+    {
+        player = gopPlayer;
+        _playerMoveDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
     }
 
     // Update is called once per frame
