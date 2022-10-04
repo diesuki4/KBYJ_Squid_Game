@@ -73,7 +73,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
-        player = PhotonNetwork.Instantiate("PlayerMG", Vector3.zero, Quaternion.identity);
+        player = PhotonNetwork.Instantiate("PlayerMG", new Vector3(0, 2.5f, -43.4f), Quaternion.identity);
         endLineTrigger.player = player;
         triggerGround.player = player;
         pmDetect = player.GetComponent<LYJ_PlayerMoveDetect>();
@@ -82,10 +82,7 @@ public class LYJ_MGGameManager : MonoBehaviourPunCallbacks, IPunObservable
 
         uniqueValues = Random.Range(float.MinValue, float.MaxValue);
         
-        if (PhotonNetwork.IsMasterClient)
-            RequestSetPos(uniqueValues);
-        else
-            photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
+        photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
         
         state = State.Idle;
     }

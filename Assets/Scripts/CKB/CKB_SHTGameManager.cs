@@ -58,10 +58,8 @@ public class CKB_SHTGameManager : MonoBehaviourPunCallbacks
 
         uniqueValue = Random.Range(float.MinValue, float.MaxValue);
         
-        if (PhotonNetwork.IsMasterClient)
-            RpcRequestSetPlayerPosition(uniqueValue);
-        else
-            photonView.RPC("RpcRequestSetPlayerPosition", RpcTarget.MasterClient, uniqueValue);
+
+        photonView.RPC("RpcRequestSetPlayerPosition", RpcTarget.MasterClient, uniqueValue);
 
         state = State.Idle;
     }

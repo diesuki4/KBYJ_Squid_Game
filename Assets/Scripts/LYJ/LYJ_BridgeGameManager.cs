@@ -29,14 +29,11 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        player = PhotonNetwork.Instantiate("Player", Vector3.up * 100, Quaternion.identity);
+        player = PhotonNetwork.Instantiate("Player", new Vector3(1.87f, 17, -22), Quaternion.identity);
 
         uniqueValues = UnityEngine.Random.Range(float.MinValue, float.MaxValue);
         
-        if (PhotonNetwork.IsMasterClient)
-            RequestSetPos(uniqueValues);
-        else
-            photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
+        photonView.RPC("RequestSetPos", RpcTarget.MasterClient, uniqueValues);
 
         ground.GetComponent<LYJ_BridgeDie>().setPlayer(player);
         endLineTrigger.player = player;
@@ -47,11 +44,7 @@ public class LYJ_BridgeGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RequestSetPos(float unqValue)
     {
-        if (PhotonNetwork.IsMasterClient)
-            RpcSetPlayerPosition(playerCount, unqValue);
-        else
-            photonView.RPC("RpcSetPlayerPosition", RpcTarget.Others, playerCount, unqValue);
-            
+        photonView.RPC("RpcSetPlayerPosition", RpcTarget.All, playerCount, unqValue);
         photonView.RPC("SetPlayerCount", RpcTarget.Others, ++playerCount);  // 방장 나갔을 때 대비해서 playerCount 초기화
         
     }
